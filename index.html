@@ -398,22 +398,89 @@ let store={};
 let filter={vp:'all',tipo:'all'};
 let view='panel';
 let cronoSub='timeline';
+let API_URL = '';
+let API_OK = false;
 
-async function loadStore(){
-  for(const it of DATA){
-    let rec=null;
-    try{ const r=await window.storage.get('daabon26:'+it.id); if(r&&r.value) rec=JSON.parse(r.value); }catch(e){}
-    if(!rec){
-      const isEjec=it.status==='Ejecutado';
-      rec={status:it.status,fteCapturado:isEjec&&it.fte?it.fte:0,copCapturado:isEjec&&it.cop?it.cop:0,segs:[]};
-    }
-    store[it.id]=rec;
-    // restore plan override if saved
-    if(rec.planOverride) it.plan=rec.planOverride;
+try{ API_URL = localStorage.getItem('daabon_api_url')||''; }catch(e){}
+
+function setApiStatus(ok, msg){
+  API_OK = ok;
+  const banner = document.getElementById('api-banner');
+  const btnConf = banner ? banner.querySelector('button') : null;
+  if(ok){
+    banner.style.background = '#2D7D5E';
+    banner.innerHTML = '✓ Conectado a Google Sheets — cambios sincronizados en tiempo real. <span style="margin-left:auto;font-size:11px;opacity:.8">'+API_URL.slice(0,60)+'…</span>';
+  } else {
+    banner.style.background = '#C03830';
+    if(btnConf) btnConf.textContent = 'Configurar';
   }
 }
-async function saveRec(id){
-  try{ await window.storage.set('daabon26:'+id,JSON.stringify(store[id]),false); }catch(e){}
+
+async function apiGet(params){
+  if(!API_URL) return null;
+  try{
+    const url = API_URL + '?' + new URLSearchParams(params);
+    const r = await fetch(url);
+    const json = await r.json();
+    return json;
+  }catch(e){ console.warn('apiGet error',e); return null; }
+}
+
+async function apiPost(body){
+  if(!API_URL) return null;
+  try{
+    const r = await fetch(API_URL, {method:'POST', body:JSON.stringify(body), headers:{'Content-Type':'application/json'}});
+    return await r.json();
+  }catch(e){ console.warn('apiPost error',e); return null; }
+}
+
+async function loadStore(){
+  // Set defaults first
+  for(const it of DATA){
+    const isEjec = it.status==='Ejecutado';
+    store[it.id] = {
+      status: it.status,
+      fteCapturado: isEjec&&it.fte ? it.fte : 0,
+      copCapturado: isEjec&&it.cop ? it.cop : 0,
+      segs: [],
+      planOverride: null
+    };
+  }
+
+  if(API_URL){
+    const data = await apiGet({action:'getAll'});
+    if(data && !data.error){
+      setApiStatus(true);
+      Object.keys(data.records).forEach(id => {
+        const rec = data.records[id];
+        if(!store[id]) store[id] = {status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null};
+        if(rec.status) store[id].status = rec.status;
+        if(rec.fteCapturado != null) store[id].fteCapturado = Number(rec.fteCapturado)||0;
+        if(rec.copCapturado != null) store[id].copCapturado = Number(rec.copCapturado)||0;
+        if(rec.planOverride){ store[id].planOverride = rec.planOverride; const it=DATA.find(x=>x.id===id); if(it) it.plan=rec.planOverride; }
+        if(rec.segs && rec.segs.length) store[id].segs = rec.segs;
+      });
+      if(data.customs && data.customs.length){
+        data.customs.forEach(init=>{
+          if(!DATA.find(x=>x.id===init.id)){
+            DATA.push({...init, fecha:null});
+            if(!store[init.id]) store[init.id]={status:init.status,fteCapturado:0,copCapturado:0,segs:[],planOverride:null};
+          }
+        });
+      }
+    } else {
+      setApiStatus(false, 'Error de conexión');
+      console.warn('Sheets error:', data);
+    }
+  }
+}
+
+async function saveRec(id, updatedBy){
+  if(API_URL && API_OK){
+    await apiPost({action:'saveRecord', id, record:{...store[id], updatedBy: updatedBy||''}});
+  }
+  // Local fallback
+  try{ await window.storage.set('daabon26:'+id, JSON.stringify(store[id]), false); }catch(e){}
 }
 
 function filtered(){ return DATA.filter(i=>(filter.vp==='all'||i.vp===filter.vp)&&(filter.tipo==='all'||i.tipo===filter.tipo)); }

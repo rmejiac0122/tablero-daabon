@@ -439,9 +439,12 @@ async function apiGet(params){
 async function apiPost(body){
   if(!API_URL) return null;
   try{
-    // Use GET with encoded payload to avoid CORS preflight
-    const params = new URLSearchParams({action: body.action, payload: JSON.stringify(body)});
-    const r = await fetch(API_URL + '?' + params);
+    // Encode entire body as a single 'data' param to avoid size issues
+    const params = new URLSearchParams({
+      action: body.action,
+      data: JSON.stringify(body)
+    });
+    const r = await fetch(API_URL + '?' + params.toString());
     return await r.json();
   }catch(e){ console.warn('apiPost error',e); return null; }
 }

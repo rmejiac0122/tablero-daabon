@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablero de Optimización — Grupo Daabon 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --navy:#0E2340;--navy2:#172F52;--navy3:#1E3D6A;
+  --sky:#3A82C4;--sky2:#5B9DD4;--skyBg:#EAF3FB;
+  --ink:#1A2B3C;--mid:#4A6278;--muted:#8099B0;--line:#D8E6F0;--paper:#F4F8FC;--white:#fff;
+  --green:#2D7D5E;--greenBg:#E6F4EE;--greenLine:#A8D5C1;
+  --amber:#B87820;--amberBg:#FDF3E0;--amberLine:#F0CC84;
+  --red:#C03830;--redBg:#FAEAE8;--redLine:#E8A8A4;
+  --gray:#788FA0;--grayBg:#EEF3F7;
+  --gold:#C8943A;
+  --font:'DM Sans',system-ui,sans-serif;
+  --display:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy);color:#fff;padding:0 28px}
+.topbar-inner{display:flex;align-items:flex-end;justify-content:space-between;padding:20px 0 0;flex-wrap:wrap;gap:10px}
+.brand-lock{display:flex;flex-direction:column;gap:2px}
+.brand-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#6A94BE;margin-bottom:2px}
+.brand-title{font-family:var(--display);font-size:26px;color:#fff;line-height:1.1}
+.brand-sub{font-size:12px;color:#8CAEC8;margin-top:3px}
+.topbar-meta{text-align:right;font-size:11.5px;color:#6A94BE;padding-bottom:4px}
+.topbar-meta b{color:#A8C8E0}
+.tabs{display:flex;gap:1px;margin-top:18px}
+.tab{padding:11px 22px;font-size:12.5px;font-weight:600;color:#7AAABF;cursor:pointer;border-radius:8px 8px 0 0;background:transparent;border:none;font-family:var(--font);letter-spacing:.2px;transition:.15s}
+.tab:hover{color:#fff;background:rgba(255,255,255,.07)}
+.tab.active{background:var(--paper);color:var(--navy);font-weight:700}
+
+/* ── TOOLBAR ── */
+.toolbar{background:var(--white);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.fgroup{display:flex;align-items:center;gap:8px}
+.fgroup label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.chip{padding:6px 14px;font-size:12px;border:1.5px solid var(--line);background:var(--white);border-radius:20px;cursor:pointer;color:var(--muted);font-weight:500;transition:.15s;font-family:var(--font)}
+.chip:hover{border-color:var(--sky);color:var(--sky)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ── CONTENT ── */
+.content{padding:24px 28px;max-width:1260px;margin:0 auto}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;transition:.15s}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.kpi.k0::after{background:linear-gradient(90deg,var(--sky),var(--navy))}
+.kpi.k1::after{background:var(--green)}
+.kpi.k2::after{background:var(--gold)}
+.kpi.k3::after{background:var(--amber)}
+.kpi.k4::after{background:var(--red)}
+.kpi-num{font-family:var(--display);font-size:32px;color:var(--navy);line-height:1;margin-bottom:6px}
+.kpi-num sup{font-size:14px;vertical-align:super}
+.kpi-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.kpi-det{font-size:11.5px;color:var(--mid);margin-top:5px}
+
+/* ── VP CARDS GRID ── */
+.vp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.vp-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.15s}
+.vp-card:hover{border-color:var(--sky2);box-shadow:0 4px 18px rgba(58,130,196,.12)}
+.vp-card.selected{border-color:var(--sky);box-shadow:0 0 0 2px var(--sky)}
+.vp-card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start}
+.vp-name{font-family:var(--display);font-size:16px;color:var(--navy)}
+.vp-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;background:var(--skyBg);color:var(--sky);text-transform:uppercase;letter-spacing:.4px}
+.vp-valor{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--navy);padding:0 16px 4px}
+.vp-valor small{font-family:var(--font);font-size:10.5px;color:var(--muted);font-weight:400}
+.vp-bar{height:6px;background:var(--grayBg);margin:10px 16px}
+.vp-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--sky))}
+.vp-footer{display:flex;justify-content:space-between;padding:10px 16px 14px;font-size:11.5px;color:var(--muted)}
+.vp-footer b{color:var(--ink)}
+
+/* ── SECTION HEADER ── */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-family:var(--display);font-size:19px;color:var(--navy)}
+.sec-sub{font-size:12px;color:var(--muted)}
+
+/* ── TABLE ── */
+.tbl-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--navy)}
+th{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#9BBBD0;padding:12px 14px;text-align:left}
+td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+tr.data-row:last-child td{border-bottom:none}
+tr.data-row:hover td{background:var(--skyBg)}
+.dept-sep td{background:var(--navy2);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:8px 14px;border-bottom:none}
+.plan-text{color:var(--ink);line-height:1.45;max-width:380px}
+.plan-area{font-size:10.5px;color:var(--muted);margin-top:2px}
+.tipo-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap}
+.tipo-tag.tec{background:var(--skyBg);color:#2A6FA0}
+.tipo-tag.pro{background:var(--greenBg);color:var(--green)}
+.impact-val{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--navy)}
+.impact-sub{font-size:10.5px;color:var(--muted)}
+.fecha-cell{font-size:12px;color:var(--mid);white-space:nowrap}
+.fecha-cell.late{color:var(--red);font-weight:700}
+.st-btn{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--line);border-radius:7px;padding:5px 10px;background:var(--white);font-family:var(--font);transition:.15s;white-space:nowrap}
+.st-btn:hover{border-color:var(--sky)}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dot.done,.dot.ejecutado{background:var(--green)}.dot.prog{background:var(--amber)}.dot.pend{background:var(--gray)}.dot.block{background:var(--red)}
+.seg-btn{font-size:11px;font-weight:600;color:var(--sky);background:var(--skyBg);border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:.15s}
+.seg-btn:hover{background:var(--sky);color:#fff}
+.seg-count{display:inline-block;min-width:16px;text-align:center;background:var(--navy);color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px}
+
+/* ── CRONOGRAMA ── */
+.crono-switch{display:flex;gap:6px;margin-bottom:16px}
+.c-btn{padding:7px 16px;font-size:12.5px;font-weight:600;border-radius:7px;border:1.5px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;font-family:var(--font);transition:.15s}
+.c-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.tl-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.tl-vp{color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.5px;text-transform:uppercase}
+.tl-vp-val{font-family:var(--mono);font-size:11.5px;color:#8CAEC8}
+.tl-scroll{overflow-x:auto;padding:12px 16px 16px}
+.tl-track{position:relative;min-width:900px}
+.tl-months{display:grid;grid-template-columns:repeat(12,1fr)}
+.tl-m{text-align:center;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px}
+.tl-line{height:2px;background:var(--line);border-radius:2px;margin-bottom:0;position:relative}
+.tl-line-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--green),var(--sky));border-radius:2px;transition:.6s}
+.tl-cols{display:grid;grid-template-columns:repeat(12,1fr);margin-top:0}
+.tl-col{position:relative;border-right:1px dashed #E8EFF5;padding-top:10px;min-height:60px}
+.tl-col:last-child{border-right:none}
+.tl-item{cursor:pointer;text-align:center;margin:0 2px 8px;transition:.15s}
+.tl-item:hover .tl-chip{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-chip{font-size:9.5px;font-weight:600;line-height:1.3;padding:4px 7px;border-radius:8px;background:var(--paper);border:1px solid var(--line);color:var(--ink);display:block;word-break:break-word;text-align:center;transition:.15s;min-width:72px}
+.tl-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
+.tl-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
+.tl-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
+.tl-chip .tl-dept{font-size:9.5px;font-weight:700;display:block;margin-bottom:2px}
+.tl-chip .tl-imp{font-size:8.5px;font-weight:600;opacity:.85;display:block}
+.tl-nodate{padding:8px 16px 12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tl-nd-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tl-nd-chip{font-size:11px;padding:3px 10px;border-radius:20px;cursor:pointer;font-weight:500;border:1px solid var(--line);background:var(--paper);color:var(--mid);transition:.15s}
+.tl-nd-chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-nd-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
+.tl-nd-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
+.tl-nd-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
+/* lista crono */
+.lista-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.lista-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.lista-vp{color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.5px;text-transform:uppercase}
+.lista-tbl{width:100%;border-collapse:collapse}
+.lista-tbl th{background:var(--paper);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--line);text-align:left}
+.lista-tbl td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:middle}
+.lista-tbl tr:last-child td{border-bottom:none}
+.lista-tbl tr:hover td{background:var(--skyBg);cursor:pointer}
+.leg{display:flex;gap:14px;padding:13px 18px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:4px}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(10,25,50,.6);display:none;align-items:flex-start;justify-content:center;padding:36px 16px;z-index:100;overflow-y:auto;backdrop-filter:blur(3px)}
+.overlay.show{display:flex}
+.modal{background:var(--white);border-radius:14px;max-width:600px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.modal-top{background:var(--navy);padding:20px 24px;border-radius:14px 14px 0 0}
+.modal-tag{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6A94BE;margin-bottom:6px}
+.modal-ttl{font-family:var(--display);font-size:17px;color:#fff;line-height:1.4}
+.modal-body{padding:22px 24px}
+.mrow{display:flex;gap:18px;margin-bottom:16px;flex-wrap:wrap}
+.mf{flex:1;min-width:110px}
+.mf .ml{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
+.mf .mv{font-size:14px;font-weight:700;color:var(--navy)}
+.mf select,.mf input[type=number]{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-family:var(--font);font-size:13px;color:var(--ink);background:var(--white)}
+.mf select:focus,.mf input:focus{outline:none;border-color:var(--sky)}
+.seg-section-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:18px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+.seg-list{display:flex;flex-direction:column;gap:9px;max-height:220px;overflow-y:auto;margin-bottom:14px}
+.seg-item{background:var(--paper);border-left:3px solid var(--sky);border-radius:0 8px 8px 0;padding:10px 14px}
+.seg-item .si-meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-bottom:4px}
+.seg-item .si-meta b{color:var(--navy)}
+.seg-item .si-txt{font-size:12.5px;color:var(--ink);line-height:1.45}
+.seg-empty{font-size:12.5px;color:var(--muted);font-style:italic;padding:6px 0}
+.add-box{background:var(--skyBg);border-radius:10px;padding:14px}
+.add-box select,.add-box textarea{width:100%;border:1.5px solid #C8DEF0;border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;margin-bottom:8px;resize:vertical;background:var(--white)}
+.add-box textarea{min-height:56px}
+.add-box select:focus,.add-box textarea:focus{outline:none;border-color:var(--sky)}
+.add-actions{display:flex;justify-content:flex-end;gap:8px}
+.btn{padding:8px 18px;border-radius:7px;font-weight:600;font-size:12.5px;cursor:pointer;border:none;font-family:var(--font);transition:.15s}
+.btn.primary{background:var(--navy);color:#fff}.btn.primary:hover{background:var(--navy3)}
+.btn.ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line)}.btn.ghost:hover{border-color:var(--sky);color:var(--sky)}
+.modal-close{float:right;cursor:pointer;color:#6A94BE;font-size:22px;line-height:1;border:none;background:none;padding:0}
+.saved-note{font-size:11px;color:var(--green);font-weight:700;opacity:0;transition:.3s;margin-left:8px}
+.saved-note.show{opacity:1}
+@media(max-width:900px){.kpi-strip{grid-template-columns:repeat(3,1fr)}.vp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.kpi-strip{grid-template-columns:1fr 1fr}.vp-grid{grid-template-columns:1fr}}
+
+.edit-box{background:#FFF8EE;border:1.5px solid var(--amberLine);border-radius:10px;padding:13px;margin-bottom:12px}
+.edit-box .edit-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--amber);margin-bottom:6px}
+.edit-box textarea{width:100%;border:1.5px solid var(--amberLine);border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;resize:vertical;min-height:56px;background:var(--white)}
+.edit-box textarea:focus{outline:none;border-color:var(--amber)}
+.edit-toggle{font-size:11px;font-weight:600;color:var(--amber);background:var(--amberBg);border:1px solid var(--amberLine);padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);margin-left:8px}
+.edit-toggle:hover{background:var(--amber);color:#fff}
+.btn-nueva{font-size:12px;font-weight:700;color:#fff;background:var(--green);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn-nueva:hover{background:var(--navy)}
+.nueva-form{background:var(--white);border:1.5px solid var(--greenLine);border-radius:12px;padding:18px 20px;margin-bottom:20px}
+.nueva-form .nf-title{font-family:var(--display);font-size:15px;color:var(--navy);margin-bottom:14px}
+.nueva-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.nf-field label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:4px}
+.nf-field input,.nf-field select,.nf-field textarea{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-family:var(--font);font-size:13px;color:var(--ink)}
+.nf-field input:focus,.nf-field select:focus,.nf-field textarea:focus{outline:none;border-color:var(--sky)}
+.nf-field textarea{min-height:56px;resize:vertical}
+.nf-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CONFIGURACIÓN: Pega tu URL de Apps Script aquí abajo
+     ═══════════════════════════════════════════════════════ -->
+<div id="api-banner" style="background:#B87820;color:#fff;font-size:12px;font-weight:600;padding:8px 28px;display:flex;align-items:center;gap:12px">
+  ⚠️ Tablero en modo local. Para sincronizar con Google Sheets, haz clic en <strong>Configurar</strong>.
+  <button onclick="showApiConfig()" style="background:#fff;color:#B87820;border:none;padding:4px 12px;border-radius:5px;cursor:pointer;font-weight:700;font-size:12px">Configurar</button>
+  <span id="api-status" style="margin-left:auto"></span>
+</div>
+
+<div id="api-config-box" style="display:none;background:#172F52;color:#fff;padding:14px 28px;font-size:12.5px;align-items:center;gap:12px;flex-wrap:wrap">
+  <span style="font-weight:600">URL Apps Script:</span>
+  <input id="api-url-input" type="text" placeholder="https://script.google.com/macros/s/..." 
+    style="flex:1;min-width:300px;padding:7px 10px;border-radius:6px;border:none;font-size:12.5px;color:#1A2B3C">
+  <button id="btn-conectar" style="background:#3A82C4;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-weight:700">Conectar</button>
+  <button id="btn-cancelar" style="background:transparent;color:#8CAEC8;border:1px solid #8CAEC8;padding:7px 12px;border-radius:6px;cursor:pointer">Cancelar</button>
+</div>
+
+<script>
+// Inline early — runs before deferred scripts
+document.addEventListener('DOMContentLoaded', function(){
+  var API_URL_STORED = localStorage.getItem('daabon_api_url')||'';
+
+  document.getElementById('api-banner').querySelector('button').addEventListener('click', function(){
+    var box = document.getElementById('api-config-box');
+    var inp = document.getElementById('api-url-input');
+    inp.value = API_URL_STORED;
+    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+  });
+
+  document.getElementById('btn-cancelar').addEventListener('click', function(){
+    document.getElementById('api-config-box').style.display = 'none';
+  });
+
+  document.getElementById('btn-conectar').addEventListener('click', function(){
+    var url = document.getElementById('api-url-input').value.trim();
+    if(!url){ alert('Por favor pega la URL del Apps Script.'); return; }
+    localStorage.setItem('daabon_api_url', url);
+    API_URL_STORED = url;
+    document.getElementById('api-config-box').style.display = 'none';
+    // Trigger full load with new URL — reload page so main script picks it up
+    location.reload();
+  });
+});
+</script>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-lock">
+      <div class="brand-tag">Grupo Daabon · Comité de Negocios</div>
+      <div class="brand-title">Tablero de Optimización 2026</div>
+      <div class="brand-sub">Seguimiento a ejecución e impacto por vicepresidencia</div>
+    </div>
+    <div class="topbar-meta">Valor total comprometido<br><b id="topbar-total">$6.334 M COP</b></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-view="panel">Panel Ejecutivo</button>
+    <button class="tab" data-view="seguimiento">Seguimiento por VP</button>
+    <button class="tab" data-view="cronograma">Cronograma</button>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="fgroup">
+    <label>VP</label>
+    <button class="chip on" data-f="vp" data-v="all">Todas</button>
+    <button class="chip" data-f="vp" data-v="VPDH">DH</button>
+    <button class="chip" data-f="vp" data-v="VPE">Ejecutiva</button>
+    <button class="chip" data-f="vp" data-v="VPF">Financiera</button>
+    <button class="chip" data-f="vp" data-v="VLOP">Log. Operaciones</button>
+    <button class="chip" data-f="vp" data-v="AUD">Auditoría</button>
+  </div>
+  <div class="fgroup">
+    <label>Tipo</label>
+    <button class="chip on" data-f="tipo" data-v="all">Todas</button>
+    <button class="chip" data-f="tipo" data-v="Proceso">Decisión/Proceso</button>
+    <button class="chip" data-f="tipo" data-v="Tecnologia">Tecnología</button>
+  </div>
+</div>
+
+<div class="content" id="content"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// ── HELPERS ──
+const D=(y,m,d)=>new Date(y,m-1,d);
+const fromSerial=n=>{ const d=new Date(1899,11,30); d.setDate(d.getDate()+n); return d; };
+const fmtCOP=v=>{ if(!v||v===0) return '—'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'MM'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; return '$'+v.toLocaleString('es-CO'); };
+const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
+const TODAY=new Date(2026,5,4);
+const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
+const STATUSES=['Pendiente','En curso','Completado','Bloqueado','Ejecutado'];
+const SC={'Completado':'done','Ejecutado':'done','En curso':'prog','Pendiente':'pend','Bloqueado':'block'};
+const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
+
+// ── DATA ──
+const DATA=[
+  // VPDH
+  {id:'dh-1',vp:'VPDH',dept:'DH Corporativo',tipo:'Proceso',plan:'Ajuste a coordinadora líder de nómina; cargo no reemplazado.',area:'DH Corporativo',fecha:D(2026,4,3),fechaTxt:'Ejecutado',fte:1,cop:175658808,status:'Ejecutado'},
+  {id:'dh-2',vp:'VPDH',dept:'DH Corporativo',tipo:'Proceso',plan:'Coordinadora Atracción de Talentos no reemplazada; BPR reasignado.',area:'DH Corporativo',fecha:D(2026,5,16),fechaTxt:'Ejecutado',fte:1,cop:67601808,status:'Ejecutado'},
+  {id:'dh-3',vp:'VPDH',dept:'DH Corporativo',tipo:'Proceso',plan:'Profesional Selección Talentos reemplazado por perfil menor costo.',area:'DH Corporativo',fecha:D(2026,6,2),fechaTxt:'Ejecutado',fte:1,cop:13754856,status:'Ejecutado'},
+  {id:'dh-4',vp:'VPDH',dept:'DH Corporativo',tipo:'Proceso',plan:'Auxiliar de Archivo no reemplazada; auxiliar de contratación promovida.',area:'DH Corporativo',fecha:null,fechaTxt:'Ejecutado',fte:1,cop:32146620,status:'Ejecutado'},
+  {id:'dh-5',vp:'VPDH',dept:'SST',tipo:'Proceso',plan:'Cargo Supervisor Senior SST – Superportuaria suprimido y no reemplazado.',area:'SST',fecha:D(2026,4,22),fechaTxt:'Ejecutado',fte:1,cop:60902328,status:'Ejecutado'},
+  {id:'dh-6',vp:'VPDH',dept:'SST',tipo:'Proceso',plan:'Auxiliar SST San Alberto promovido; posición de auxiliar no cubierta.',area:'SST',fecha:D(2026,4,3),fechaTxt:'Ejecutado',fte:1,cop:46777992,status:'Ejecutado'},
+  {id:'dh-7',vp:'VPDH',dept:'SST',tipo:'Proceso',plan:'Coordinador Extractora Tequendama renunció; reemplazo con menor salario.',area:'SST',fecha:D(2026,6,16),fechaTxt:'Ejecutado',fte:1,cop:19486860,status:'Ejecutado'},
+  {id:'dh-8',vp:'VPDH',dept:'SST',tipo:'Proceso',plan:'Vigía SST Trading suprimido; funciones absorbidas por coordinador y supervisor existentes.',area:'SST',fecha:D(2026,7,23),fechaTxt:'Jul 2026',fte:1,cop:32146620,status:'Pendiente'},
+  {id:'dh-9',vp:'VPDH',dept:'Centro de Trabajo DH',tipo:'Proceso',plan:'Asistente de Nómina Santander suprimido.',area:'Santander',fecha:D(2026,4,15),fechaTxt:'Ejecutado',fte:1,cop:43779972,status:'Ejecutado'},
+  {id:'dh-10',vp:'VPDH',dept:'Centro de Trabajo DH',tipo:'Proceso',plan:'Asistente DH San Alberto suprimido.',area:'San Alberto',fecha:D(2026,4,22),fechaTxt:'Ejecutado',fte:1,cop:46108992,status:'Ejecutado'},
+  {id:'dh-11',vp:'VPDH',dept:'Centro de Trabajo DH',tipo:'Proceso',plan:'Auxiliar de Nómina suprimido.',area:'DH',fecha:D(2026,6,2),fechaTxt:'Ejecutado',fte:1,cop:32146620,status:'Ejecutado'},
+  {id:'dh-12',vp:'VPDH',dept:'Centro de Trabajo DH',tipo:'Proceso',plan:'Supervisor Metodológico Palmatra suprimido.',area:'Palmatra',fecha:D(2026,7,22),fechaTxt:'Jul 2026',fte:1,cop:44386260,status:'Pendiente'},
+  {id:'dh-13',vp:'VPDH',dept:'Adicionales DH',tipo:'Tecnologia',plan:'Con Geodaabon para Nómina: evaluar desvinculación de 2 auxiliares de Nómina (San Alberto + Santander).',area:'Nómina',fecha:D(2026,10,15),fechaTxt:'Oct 2026',fte:2,cop:68984240,status:'En curso'},
+  {id:'dh-14',vp:'VPDH',dept:'Adicionales DH',tipo:'Proceso',plan:'Auxiliar de Archivo (San Alberto) no reemplazado.',area:'San Alberto',fecha:null,fechaTxt:'Ejecutado',fte:1,cop:29918290,status:'Ejecutado'},
+  {id:'dh-15',vp:'VPDH',dept:'Proyectos DH',tipo:'Tecnologia',plan:'Hoja de Vida automática SAP.',area:'DH / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'dh-16',vp:'VPDH',dept:'Proyectos DH',tipo:'Tecnologia',plan:'Migración módulo Selección y Contratación CADI.',area:'DH / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'dh-17',vp:'VPDH',dept:'Proyectos DH',tipo:'Tecnologia',plan:'Automatización recobro de incapacidades.',area:'DH / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'dh-18',vp:'VPDH',dept:'Proyectos DH',tipo:'Tecnologia',plan:'Afiliación automática – Aportes en Línea.',area:'DH / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'dh-19',vp:'VPDH',dept:'Proyectos DH',tipo:'Tecnologia',plan:'Módulo de Novedades Nómina.',area:'DH / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'dh-20',vp:'VPDH',dept:'SST ARL',tipo:'Proceso',plan:'Reclasificación de riesgo laboral en empleados — ahorro estimado $100M/mes.',area:'SST',fecha:D(2026,7,23),fechaTxt:'Jul 2026',fte:null,cop:1200000000,status:'En curso'},
+  // VPE
+  {id:'e-1',vp:'VPE',dept:'Seguridad Física',tipo:'Tecnologia',plan:'Implementación del perímetro digital ZFA.',area:'ZFA',fecha:null,fechaTxt:'En pruebas',fte:12,cop:600000000,status:'En curso'},
+  {id:'e-2',vp:'VPE',dept:'Seguridad Física',tipo:'Proceso',plan:'Reubicar personal en portería, solo guardas en turno noche — La Samaria.',area:'La Samaria',fecha:D(2026,10,1),fechaTxt:'Ago–Oct 2026',fte:4,cop:200000000,status:'Pendiente'},
+  {id:'e-3',vp:'VPE',dept:'Seguridad Física',tipo:'Tecnologia',plan:'Perímetro digital + reubicación: Terlica, Newland, Dávila, Cisne.',area:'Múltiples sedes',fecha:null,fechaTxt:'Depende de pilotos',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-4',vp:'VPE',dept:'Seguridad Física',tipo:'Proceso',plan:'Incorporar SENAs en portería (71 cupos no utilizados de 178 contratados).',area:'Grupo',fecha:D(2026,12,15),fechaTxt:'Dic 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-5',vp:'VPE',dept:'Jurídico',tipo:'Tecnologia',plan:'Automatización Compliance; libera Director de Gestión y Ética Empresarial.',area:'Compliance',fecha:null,fechaTxt:'Realizado',fte:1,cop:268400000,status:'Ejecutado'},
+  {id:'e-6',vp:'VPE',dept:'Jurídico',tipo:'Tecnologia',plan:'Revisión asistida por IA local de contratos vs. cláusulas estándar del Grupo.',area:'Contratos / IT',fecha:D(2026,6,22),fechaTxt:'Jun 22, 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-7',vp:'VPE',dept:'Sostenibilidad',tipo:'Proceso',plan:'No renovar Asistente de Gestión Ambiental; modelo 1 coordinador + aprendices.',area:'Sostenibilidad',fecha:null,fechaTxt:'Realizado',fte:1,cop:43200000,status:'Ejecutado'},
+  {id:'e-8',vp:'VPE',dept:'Sostenibilidad',tipo:'Proceso',plan:'Asistente Administrativa renovada 6 meses; pendiente distribución de actividades.',area:'Sostenibilidad',fecha:null,fechaTxt:'Por definir',fte:1,cop:38400000,status:'En curso'},
+  {id:'e-9',vp:'VPE',dept:'Sostenibilidad',tipo:'Proceso',plan:'Con jubilación Director Certificaciones: cargo eliminado, rol integrado a Dirección Sostenibilidad.',area:'Certificaciones',fecha:D(2027,7,1),fechaTxt:'Jul 2027',fte:1,cop:253175634,status:'Pendiente'},
+  {id:'e-10',vp:'VPE',dept:'Sostenibilidad',tipo:'Tecnologia',plan:'Sistema de captura continua para informes operativos y regulatorios ICA.',area:'Sostenibilidad',fecha:D(2026,10,31),fechaTxt:'Oct 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-11',vp:'VPE',dept:'SIG',tipo:'Proceso',plan:'Pasar de modelo asistencial a modelo de control; responsabilizar líderes/directores.',area:'SIG',fecha:D(2026,10,31),fechaTxt:'Oct 2026',fte:3,cop:129600000,status:'En curso'},
+  {id:'e-12',vp:'VPE',dept:'SIG',tipo:'Tecnologia',plan:'Seguimientos con escalamiento automático a Gerencias/VPs por incumplimiento.',area:'SIG / IT',fecha:D(2026,10,31),fechaTxt:'Oct 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-13',vp:'VPE',dept:'La Samaria',tipo:'Proceso',plan:'Cargo fusionado: Coordinador Administrativo + Almacenes en una posición.',area:'Adm. y Almacenes',fecha:D(2026,6,2),fechaTxt:'Jun 2, 2026',fte:1,cop:66000000,status:'En curso'},
+  {id:'e-14',vp:'VPE',dept:'La Samaria',tipo:'Tecnologia',plan:'Automatizar tareas manuales de alto volumen: conciliaciones, informes, nómina.',area:'Administración',fecha:D(2026,8,31),fechaTxt:'Ago 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-15',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Herramienta de Planificación Cluster.',area:'Cluster',fecha:D(2026,7,31),fechaTxt:'Jul 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-16',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Asignación de combustibles por Agente IA — Elogia (API Terpel).',area:'Elogia',fecha:D(2026,6,15),fechaTxt:'Jun 15, 2026',fte:1,cop:0,status:'En curso'},
+  {id:'e-17',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Automatización cargue de incapacidades a portales EPS.',area:'DH',fecha:null,fechaTxt:'En pruebas (Ombia)',fte:1,cop:0,status:'En curso'},
+  {id:'e-18',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Host to Host bancos (BBVA funcionando, BBOG en proceso).',area:'Tesorería',fecha:null,fechaTxt:'En proceso',fte:null,cop:0,status:'En curso'},
+  {id:'e-19',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'RPA contabilización automática de pagos Tesorería.',area:'Tesorería',fecha:null,fechaTxt:'En pruebas',fte:2,cop:0,status:'En curso'},
+  {id:'e-20',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Portal proveedores — visualización facturas y pagos (reunión Jun 2).',area:'Tesorería',fecha:D(2026,6,2),fechaTxt:'Jun 2, 2026',fte:null,cop:0,status:'En curso'},
+  {id:'e-21',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Automatizar gestión de cobranza y conciliación proveedores/clientes.',area:'Facturación',fecha:D(2026,8,31),fechaTxt:'Ago 2026',fte:1,cop:0,status:'En curso'},
+  {id:'e-22',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Automatizar contabilización facturas repetitivas Cuentas por Pagar.',area:'CxP',fecha:D(2026,8,31),fechaTxt:'Ago 2026',fte:2,cop:0,status:'En curso'},
+  {id:'e-23',vp:'VPE',dept:'Desarrollos IT',tipo:'Tecnologia',plan:'Automatizar cargue Multicash a SAP.',area:'CxP',fecha:null,fechaTxt:'Realizado',fte:null,cop:0,status:'Ejecutado'},
+  // VPF
+  {id:'f-1',vp:'VPF',dept:'Tesorería',tipo:'Tecnologia',plan:'Host to Host con bancos para reducir tiempos en programación de pagos.',area:'Tesorería / IT',fecha:D(2026,11,30),fechaTxt:'31 ago – 30 nov',fte:null,cop:0,status:'En curso'},
+  {id:'f-2',vp:'VPF',dept:'Tesorería',tipo:'Tecnologia',plan:'Desarrollar RPA o agente que contabilice automáticamente pagos en SAP.',area:'Tesorería / IT',fecha:fromSerial(46325),fechaTxt:'Oct 30, 2026',fte:2,cop:105958832,status:'Pendiente'},
+  {id:'f-3',vp:'VPF',dept:'Tesorería',tipo:'Proceso',plan:'Determinar si la trazabilidad de pagos seguirá archivándose físicamente.',area:'Tesorería',fecha:fromSerial(46233),fechaTxt:'Jul 30, 2026',fte:1,cop:55975626,status:'Pendiente'},
+  {id:'f-4',vp:'VPF',dept:'Tesorería',tipo:'Proceso',plan:'Pasar de pagos PSE a portales de bancos para mejorar tiempo de la Dirección.',area:'Tesorería',fecha:fromSerial(46295),fechaTxt:'Sep 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-5',vp:'VPF',dept:'Tesorería',tipo:'Proceso',plan:'Estandarizar recepción de requerimientos de pago recibidos por la Dirección.',area:'Tesorería / IT',fecha:fromSerial(46325),fechaTxt:'Oct 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-6',vp:'VPF',dept:'Tesorería',tipo:'Tecnologia',plan:'Portal proveedores: visualización estado facturas y pagos.',area:'Tesorería / IT',fecha:fromSerial(46356),fechaTxt:'Nov 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-7',vp:'VPF',dept:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de la Facturación de Extractoras.',area:'Facturación',fecha:fromSerial(46234),fechaTxt:'Jul 31, 2026',fte:1.5,cop:0,status:'Pendiente'},
+  {id:'f-8',vp:'VPF',dept:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización del envío de estados de cuenta desde SAP.',area:'Facturación',fecha:fromSerial(46203),fechaTxt:'Jun 30, 2026',fte:null,cop:70762579,status:'Pendiente'},
+  {id:'f-9',vp:'VPF',dept:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de pedidos de ventas SAP Cluster.',area:'Facturación',fecha:fromSerial(46265),fechaTxt:'Ago 31, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-10',vp:'VPF',dept:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar contabilización facturas repetitivas de gran volumen.',area:'CxP',fecha:fromSerial(46325),fechaTxt:'Oct 30, 2026',fte:2,cop:105241248,status:'Pendiente'},
+  {id:'f-11',vp:'VPF',dept:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar liberación de facturas riesgo Bajo/Medio ya contabilizadas en SAP.',area:'CxP',fecha:fromSerial(46295),fechaTxt:'Sep 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-12',vp:'VPF',dept:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar cargue Multicash a SAP.',area:'CxP',fecha:fromSerial(46203),fechaTxt:'Jun 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-13',vp:'VPF',dept:'Compras',tipo:'Tecnologia',plan:'Automatizar compras repetitivas por parámetros del Grupo (Transporte Terceros Elogia).',area:'Compras',fecha:fromSerial(46188),fechaTxt:'Jun 15, 2026',fte:1,cop:202760288,status:'Ejecutado'},
+  {id:'f-14',vp:'VPF',dept:'Compras',tipo:'Proceso',plan:'Garantizar 80% de solicitudes de materiales y activos fijos pasen por Licita.',area:'Compras',fecha:fromSerial(46233),fechaTxt:'Jul 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-15',vp:'VPF',dept:'Impuestos',tipo:'Tecnologia',plan:'Modelo tecnológico para pre-liquidar impuestos mensuales sin depuración.',area:'Impuestos',fecha:fromSerial(46356),fechaTxt:'Nov 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-16',vp:'VPF',dept:'Impuestos',tipo:'Tecnologia',plan:'KEEVANA v2: gestión devolución saldos a favor y bases para requerimientos estatales.',area:'Impuestos',fecha:fromSerial(46356),fechaTxt:'Nov 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-17',vp:'VPF',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Mejora reportes QlikSense para juntas (costos extractoras y cultivos).',area:'Costos',fecha:fromSerial(46142),fechaTxt:'Abr 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-18',vp:'VPF',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar traslados presupuestales aprobados — Elogia.',area:'Presupuestos',fecha:fromSerial(46142),fechaTxt:'Abr 30, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-19',vp:'VPF',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar traslados presupuestales aprobados — Cultivos.',area:'Presupuestos',fecha:fromSerial(46185),fechaTxt:'Jun 12, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-20',vp:'VPF',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Optimización cargue de nómina para presupuesto anual.',area:'Presupuestos',fecha:fromSerial(46112),fechaTxt:'Mar 31, 2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-21',vp:'VPF',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Validación de cierre técnico de órdenes de producción.',area:'Costos',fecha:fromSerial(46192),fechaTxt:'Jun 19, 2026',fte:null,cop:0,status:'Pendiente'},
+  // VLOP
+  {id:'v-1',vp:'VLOP',dept:'Sombrilla',tipo:'Proceso',plan:'Consolidar estructuras Sombrilla: 2 Gerentes ZFA, 1 Dirección Admin-Financiera única.',area:'ZFA / Sombrilla',fecha:null,fechaTxt:'Por definir',fte:3,cop:631735022,status:'Pendiente'},
+  {id:'v-2',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'01 · SAP Pagos Proveedores — eliminación trabajo manual.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:58800000,status:'En curso'},
+  {id:'v-3',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'02 · Control de Combustible — ahorro 1% sobre costo mensual.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:240000000,status:'En curso'},
+  {id:'v-4',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'03 · Peajes Electrónicos Etapa 1 — 4×1000 retornado a conductores flota propia.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:28000000,status:'En curso'},
+  {id:'v-5',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'04 · Peajes Electrónicos Etapa 2 — conciliación y legalización SAP.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:2900000,status:'En curso'},
+  {id:'v-6',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'05 · WhatsApp a Proveedores — reducir atención telefónica.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:159900000,status:'En curso'},
+  {id:'v-7',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'06 · Check List APP TMS — utilidad para clientes de alta exigencia.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:870000000,status:'En curso'},
+  {id:'v-8',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'07 · Conciliación ECOLLET — tiempo en conciliación de carteras.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:4700000,status:'En curso'},
+  {id:'v-9',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'08 · Facturación Automática SILOGTRAN — remesa y facturación Terpel.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:13800000,status:'En curso'},
+  {id:'v-10',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'09 · Validación Proveedores — sostenimiento recurso a mayor volumen.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:35300000,status:'En curso'},
+  {id:'v-11',vp:'VLOP',dept:'Elogia IT',tipo:'Tecnologia',plan:'11 · Torre de Control GPS — ahorro vs. personal requerido sin control 24/7.',area:'Elogia',fecha:null,fechaTxt:'En proceso',fte:null,cop:141100000,status:'En curso'},
+  // AUD
+  {id:'a-1',vp:'AUD',dept:'Auditoría',tipo:'Proceso',plan:'Reducción tiempos de traslados: Jorge Judex con períodos más largos en San Alberto.',area:'Auditoría',fecha:null,fechaTxt:'En proceso',fte:null,cop:0,status:'En curso'},
+  {id:'a-2',vp:'AUD',dept:'Auditoría',tipo:'Proceso',plan:'Descargar Auditoría de funciones operativas (cajas menores, facturas fruta, anticipos).',area:'Auditoría',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'a-3',vp:'AUD',dept:'Auditoría',tipo:'Tecnologia',plan:'Optimizar labores con software: gestor de auditorías + análisis de datos e IA.',area:'Auditoría / IT',fecha:null,fechaTxt:'Por definir',fte:null,cop:0,status:'Pendiente'},
+  {id:'a-4',vp:'AUD',dept:'Auditoría',tipo:'Proceso',plan:'3 contrataciones detenidas; solo 1 autorizada. Equipo: 8 + 1 director.',area:'Auditoría',fecha:fromSerial(46023),fechaTxt:'Ene 2026',fte:2,cop:94718105,status:'Ejecutado'},
+];
+
+// ── STATE ──
+let store={};
+let filter={vp:'all',tipo:'all'};
+let view='panel';
+let cronoSub='timeline';
+
+async function loadStore(){
+  for(const it of DATA){
+    let rec=null;
+    try{ const r=await window.storage.get('daabon26:'+it.id); if(r&&r.value) rec=JSON.parse(r.value); }catch(e){}
+    if(!rec){
+      const isEjec=it.status==='Ejecutado';
+      rec={status:it.status,fteCapturado:isEjec&&it.fte?it.fte:0,copCapturado:isEjec&&it.cop?it.cop:0,segs:[]};
+    }
+    store[it.id]=rec;
+    // restore plan override if saved
+    if(rec.planOverride) it.plan=rec.planOverride;
+  }
+}
+async function saveRec(id){
+  try{ await window.storage.set('daabon26:'+id,JSON.stringify(store[id]),false); }catch(e){}
+}
+
+function filtered(){ return DATA.filter(i=>(filter.vp==='all'||i.vp===filter.vp)&&(filter.tipo==='all'||i.tipo===filter.tipo)); }
+
+// ── RENDER ROUTER ──
+function render(){ document.getElementById('content').innerHTML=''; if(view==='panel') renderPanel(); else if(view==='seguimiento') renderSeguimiento(); else renderCronograma(); }
+
+// ── PANEL EJECUTIVO ──
+function renderPanel(){
+  const all=filtered();
+  const total=all.length;
+  const done=all.filter(i=>['Completado','Ejecutado'].includes(store[i.id].status)).length;
+  const prog=all.filter(i=>store[i.id].status==='En curso').length;
+  const block=all.filter(i=>store[i.id].status==='Bloqueado').length;
+  const copTotal=all.reduce((s,i)=>s+i.cop,0);
+  const copCap=all.reduce((s,i)=>s+(store[i.id].copCapturado||0),0);
+  const fteTotal=all.reduce((s,i)=>s+(i.fte||0),0);
+  const fteCap=all.reduce((s,i)=>s+(store[i.id].fteCapturado||0),0);
+  const vps=['VPDH','VPE','VPF','VLOP','AUD'];
+  const vpCards=vps.map(vp=>{
+    const items=DATA.filter(i=>i.vp===vp&&(filter.tipo==='all'||i.tipo===filter.tipo));
+    if(!items.length) return '';
+    const d=items.filter(i=>['Completado','Ejecutado'].includes(store[i.id].status)).length;
+    const p=items.filter(i=>store[i.id].status==='En curso').length;
+    const cop=items.reduce((s,i)=>s+i.cop,0);
+    const pct=items.length?Math.round(d/items.length*100):0;
+    return `<div class="vp-card" onclick="setVPFilter('${vp}')">
+      <div class="vp-card-head">
+        <div class="vp-name">${VP_NAMES[vp]}</div>
+        <span class="vp-badge">${vp}</span>
+      </div>
+      <div class="vp-valor">${fmtCOP(cop)} <small>comprometido</small></div>
+      <div class="vp-bar"><div class="vp-bar-fill" style="width:${pct}%"></div></div>
+      <div class="vp-footer">
+        <span><b>${d}</b>/${items.length} completadas</span>
+        <span>${p} en curso</span>
+        <span><b>${pct}%</b></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('content').innerHTML=`
+    <div class="kpi-strip">
+      <div class="kpi k0"><div class="kpi-num">${total}</div><div class="kpi-lbl">Iniciativas</div><div class="kpi-det">${done} completadas · ${prog} en curso · ${block} bloqueadas</div></div>
+      <div class="kpi k1"><div class="kpi-num">${fmtCOP(copTotal)}</div><div class="kpi-lbl">COP comprometido</div><div class="kpi-det">Capturado: <b>${fmtCOP(copCap)}</b></div></div>
+      <div class="kpi k2"><div class="kpi-num">${fteTotal}</div><div class="kpi-lbl">Personas comprometidas</div><div class="kpi-det">Capturadas: <b>${fteCap} personas</b></div></div>
+      <div class="kpi k4"><div class="kpi-num">${all.filter(i=>i.fecha&&i.fecha<TODAY&&!['Completado','Ejecutado'].includes(store[i.id].status)).length}</div><div class="kpi-lbl">Vencidas sin cerrar</div><div class="kpi-det">Requieren atención inmediata</div></div>
+    </div>
+    <div class="sec-h"><div class="sec-title">Avance por Vicepresidencia</div><div class="sec-sub">Clic para filtrar</div></div>
+    <div class="vp-grid">${vpCards}</div>
+  `;
+}
+
+function setVPFilter(vp){
+  filter.vp=vp;
+  document.querySelectorAll('.chip[data-f="vp"]').forEach(c=>{c.classList.remove('on'); if(c.dataset.v===vp) c.classList.add('on');});
+  view='seguimiento';
+  document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active'); if(t.dataset.view==='seguimiento') t.classList.add('active');});
+  render();
+}
+
+// ── SEGUIMIENTO ──
+function renderSeguimiento(){
+  const items=filtered();
+  const byVP={};
+  items.forEach(i=>{ (byVP[i.vp]=byVP[i.vp]||{name:VP_NAMES[i.vp],depts:{}}); (byVP[i.vp].depts[i.dept]=byVP[i.vp].depts[i.dept]||[]).push(i); });
+
+  let html='';
+  let showNuevaForm = false;
+
+  Object.keys(byVP).forEach(vp=>{
+    const {name,depts}=byVP[vp];
+    let rows='';
+    Object.keys(depts).forEach(dept=>{
+      rows+=`<tr class="dept-sep"><td colspan="7">▸ ${dept}</td></tr>`;
+      depts[dept].forEach(i=>{
+        const rec=store[i.id];
+        const sc=SC[rec.status]||'pend';
+        const late=i.fecha&&i.fecha<TODAY&&!['Completado','Ejecutado'].includes(rec.status);
+        const ns=rec.segs.length;
+        rows+=`<tr class="data-row">
+          <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
+          <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tecnología':'Decisión'}</span></td>
+          <td><div class="impact-val">${i.fte?'-'+fmtN(i.fte)+' FTE':'—'}</div><div class="impact-sub">${fmtCOP(i.cop)}</div></td>
+          <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
+          <td><button class="st-btn" onclick="cycleStatus('${i.id}')"><span class="dot ${sc}"></span>${rec.status}</button></td>
+          <td><div class="impact-val">${rec.fteCapturado||0} FTE</div><div class="impact-sub">${fmtCOP(rec.copCapturado||0)}</div></td>
+          <td><button class="seg-btn" onclick="openModal('${i.id}')">Bitácora${ns?`<span class="seg-count">${ns}</span>`:''}</button></td>
+        </tr>`;
+      });
+    });
+    const vItems=items.filter(x=>x.vp===vp);
+    const vCop=vItems.reduce((s,x)=>s+x.cop,0);
+    const vDone=vItems.filter(x=>['Completado','Ejecutado'].includes(store[x.id].status)).length;
+    html+=`<div class="sec-h" style="margin-top:${html?'24px':'0'}">
+      <div class="sec-title">${name}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="sec-sub">${vDone}/${vItems.length} completadas · ${fmtCOP(vCop)}</span>
+        <button class="btn-nueva" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>
+      </div>
+    </div>
+    <div id="nueva-form-${vp}"></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th style="width:36%">Iniciativa</th><th>Tipo</th><th>Impacto</th><th>Fecha</th><th>Estado</th><th>Capturado</th><th>Bitácora</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  });
+  document.getElementById('content').innerHTML=html||'<p style="color:var(--muted);padding:20px">No hay iniciativas para los filtros seleccionados.</p>';
+}
+
+function openNuevaForm(vp){
+  const container=document.getElementById('nueva-form-'+vp);
+  if(!container) return;
+  const depts=[...new Set(DATA.filter(i=>i.vp===vp).map(i=>i.dept))];
+  const dopts=depts.map(d=>`<option>${d}</option>`).join('');
+  const topts=['Proceso','Tecnologia'].map(t=>`<option>${t}</option>`).join('');
+  const sopts=STATUSES.map(s=>`<option ${s==='Pendiente'?'selected':''}>${s}</option>`).join('');
+  container.innerHTML=`<div class="nueva-form">
+    <div class="nf-title">Nueva iniciativa — ${VP_NAMES[vp]}</div>
+    <div class="nf-field" style="margin-bottom:12px">
+      <label>Plan de acción</label>
+      <textarea id="nf-plan" placeholder="Describe la iniciativa…"></textarea>
+    </div>
+    <div class="nueva-grid">
+      <div class="nf-field"><label>Departamento</label>
+        <input id="nf-dept" list="dept-list-${vp}" placeholder="Selecciona o escribe">
+        <datalist id="dept-list-${vp}">${dopts}</datalist>
+      </div>
+      <div class="nf-field"><label>Área</label><input id="nf-area" placeholder="Ej: Tesorería / IT"></div>
+      <div class="nf-field"><label>Tipo</label><select id="nf-tipo">${topts}</select></div>
+      <div class="nf-field"><label>Estado inicial</label><select id="nf-status">${sopts}</select></div>
+      <div class="nf-field"><label>FTE comprometido</label><input id="nf-fte" type="number" step="0.5" min="0" placeholder="0"></div>
+      <div class="nf-field"><label>COP comprometido (M)</label><input id="nf-cop" type="number" step="1" min="0" placeholder="0"></div>
+      <div class="nf-field"><label>Fecha compromiso</label><input id="nf-fecha" type="date"></div>
+      <div class="nf-field"><label>Texto fecha</label><input id="nf-fechatxt" placeholder="Ej: Sep 2026"></div>
+    </div>
+    <div class="nf-actions">
+      <button class="btn ghost" onclick="cancelNueva('${vp}')">Cancelar</button>
+      <button class="btn primary" onclick="guardarNueva('${vp}')">Guardar iniciativa</button>
+    </div>
+  </div>`;
+}
+
+function cancelNueva(vp){
+  const c=document.getElementById('nueva-form-'+vp); if(c) c.innerHTML='';
+}
+
+async function guardarNueva(vp){
+  const plan=document.getElementById('nf-plan').value.trim();
+  if(!plan){ alert('El plan de acción es obligatorio.'); return; }
+  const dept=document.getElementById('nf-dept').value.trim()||'Sin departamento';
+  const area=document.getElementById('nf-area').value.trim()||dept;
+  const tipo=document.getElementById('nf-tipo').value;
+  const status=document.getElementById('nf-status').value;
+  const fte=parseFloat(document.getElementById('nf-fte').value)||null;
+  const cop=(parseFloat(document.getElementById('nf-cop').value)||0)*1e6;
+  const fechaVal=document.getElementById('nf-fecha').value;
+  const fecha=fechaVal?new Date(fechaVal):null;
+  const fechaTxt=document.getElementById('nf-fechatxt').value.trim()||(fechaVal?fechaVal:'Por definir');
+  const id='custom-'+Date.now();
+  const newInit={id,vp,dept,area,tipo,plan,fechaTxt,fte,cop,status};
+  DATA.push({...newInit,fecha});
+  const isEjec=status==='Ejecutado';
+  store[id]={status,fteCapturado:isEjec&&fte?fte:0,copCapturado:isEjec&&cop?cop:0,segs:[],planOverride:null};
+  if(API_URL&&API_OK){ await apiPost({action:'saveNew',initiative:{...newInit,createdBy:'Usuario'}}); }
+  await saveRec(id);
+  render();
+}
+
+// ── CRONOGRAMA ──
+function renderCronograma(){
+  const items=filtered();
+  const vps=['VPDH','VPE','VPF','VLOP','AUD'];
+  const switcher=`<div class="crono-switch">
+    <button class="c-btn ${cronoSub==='timeline'?'active':''}" onclick="setCronoSub('timeline')">🗓 Línea de tiempo</button>
+    <button class="c-btn ${cronoSub==='lista'?'active':''}" onclick="setCronoSub('lista')">☰ Lista</button>
+  </div>`;
+
+  let body='';
+  vps.forEach(vp=>{
+    const arr=items.filter(i=>i.vp===vp);
+    if(!arr.length) return;
+    const cop=arr.reduce((s,i)=>s+i.cop,0);
+    if(cronoSub==='timeline') body+=buildTL(arr,VP_NAMES[vp],fmtCOP(cop));
+    else body+=buildLista(arr,VP_NAMES[vp]);
+  });
+
+  const leg=`<div class="leg">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--greenBg);border:1.5px solid var(--greenLine);margin-right:4px"></span>Completado</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1.5px solid var(--line);margin-right:4px"></span>Pendiente / En curso</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado</span>
+    <span style="margin-left:auto;font-size:11px">Clic para abrir bitácora</span>
+  </div>`;
+  document.getElementById('content').innerHTML=switcher+body+leg;
+}
+
+function tlColor(i){
+  const st=store[i.id].status;
+  if(['Completado','Ejecutado'].includes(st)) return 'tl-done';
+  if(i.fecha && i.fecha<TODAY && !['Completado','Ejecutado'].includes(st)) return 'tl-late';
+  return 'tl-pend';
+}
+function tlImpact(i){
+  const parts=[];
+  if(i.fte) parts.push('-'+fmtN(i.fte)+' FTE');
+  if(i.cop) parts.push(fmtCOP(i.cop));
+  return parts.join(' · ')||'';
+}
+function buildTL(arr,label,val){
+  const buckets=Array.from({length:12},()=>[]);
+  const nodate=[];
+  arr.forEach(i=>{ if(i.fecha&&i.fecha.getFullYear()===2026) buckets[i.fecha.getMonth()].push(i); else nodate.push(i); });
+  const maxStack=Math.max(...buckets.map(b=>b.length),1);
+  const tlH=Math.max(90,16+maxStack*68+12);
+  const progPct=Math.round(arr.filter(i=>['Completado','Ejecutado'].includes(store[i.id].status)).length/arr.length*100);
+  let cols='';
+  for(let m=0;m<12;m++){
+    let items2='';
+    buckets[m].forEach((i)=>{
+      const cls=tlColor(i);
+      const imp=tlImpact(i);
+      items2+=`<div class="tl-item" onclick="openModal('${i.id}')" title="${i.plan}">
+        <span class="tl-chip ${cls}">
+          <span class="tl-dept">${i.dept}</span>
+          ${imp?`<span class="tl-imp">${imp}</span>`:''}
+        </span>
+      </div>`;
+    });
+    cols+=`<div class="tl-col">${items2}</div>`;
+  }
+  const nd=nodate.length?`<div class="tl-nodate"><span class="tl-nd-lbl">Sin fecha:</span>${nodate.map(i=>{
+    const cls=tlColor(i); const imp=tlImpact(i);
+    return `<span class="tl-nd-chip ${cls}" onclick="openModal('${i.id}')" title="${i.plan}">${i.dept}${imp?' · '+imp:''}</span>`;
+  }).join('')}</div>`:'';
+  return `<div class="tl-wrap">
+    <div class="tl-head"><span class="tl-vp">${label}</span><span class="tl-vp-val">${val}</span></div>
+    <div class="tl-scroll"><div class="tl-track" style="height:${tlH+30}px">
+      <div class="tl-months">${MONTHS.map(m=>`<div class="tl-m">${m}</div>`).join('')}</div>
+      <div class="tl-line"><div class="tl-line-fill" style="width:${progPct}%"></div></div>
+      <div class="tl-cols" style="height:${tlH}px">${cols}</div>
+    </div></div>${nd}
+  </div>`;
+}
+
+function buildLista(arr,label){
+  const sorted=[...arr].sort((a,b)=>{ if(!a.fecha&&!b.fecha) return 0; if(!a.fecha) return 1; if(!b.fecha) return -1; return a.fecha-b.fecha; });
+  const rows=sorted.map(i=>{
+    const sc=SC[store[i.id].status]||'pend';
+    const late=i.fecha&&i.fecha<TODAY&&!['Completado','Ejecutado'].includes(store[i.id].status);
+    return `<tr onclick="openModal('${i.id}')">
+      <td><b>${i.dept}</b></td>
+      <td style="max-width:340px">${i.plan.length>70?i.plan.slice(0,68)+'…':i.plan}</td>
+      <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tec':'Proceso'}</span></td>
+      <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
+      <td><span class="st-btn" style="cursor:default"><span class="dot ${sc}"></span>${store[i.id].status}</span></td>
+    </tr>`;
+  }).join('');
+  return `<div class="lista-wrap">
+    <div class="lista-head"><span class="lista-vp">${label}</span></div>
+    <table class="lista-tbl"><thead><tr><th>Departamento</th><th>Iniciativa</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+
+function setCronoSub(v){ cronoSub=v; renderCronograma(); }
+
+// ── MODAL ──
+let editingPlan = false;
+function openModal(id, showEdit=false){
+  const i=DATA.find(x=>x.id===id);
+  const rec=store[id];
+  const opts=STATUSES.map(s=>`<option ${s===rec.status?'selected':''}>${s}</option>`).join('');
+  const aopts=AUTHORS.map(a=>`<option>${a}</option>`).join('');
+  const segs=rec.segs.length
+    ? rec.segs.map(s=>`<div class="seg-item"><div class="si-meta"><b>${s.autor}</b><span>${s.fecha}</span></div><div class="si-txt">${esc(s.txt)}</div></div>`).join('')
+    : '<div class="seg-empty">Sin seguimientos registrados aún.</div>';
+  const editPanel = showEdit ? `
+    <div class="edit-box">
+      <div class="edit-lbl">✏️ Editar iniciativa</div>
+      <textarea id="edit-plan">${esc(i.plan)}</textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">
+        <button class="btn ghost" onclick="openModal('${id}',false)" style="font-size:12px;padding:6px 12px">Cancelar</button>
+        <button class="btn primary" onclick="savePlan('${id}')" style="font-size:12px;padding:6px 12px;background:var(--amber)">Guardar cambio</button>
+      </div>
+    </div>` : '';
+  document.getElementById('modal').innerHTML=`
+    <div class="modal-top">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-tag">${VP_NAMES[i.vp]} · ${i.dept} · ${i.tipo==='Tecnologia'?'Tecnología':'Decisión/Proceso'}</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-top:4px">
+        <div class="modal-ttl" style="flex:1">${esc(i.plan)}</div>
+        <button class="edit-toggle" onclick="openModal('${id}',${!showEdit})">${showEdit?'✕ Cancelar':'✏️ Editar'}</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      ${editPanel}
+      <div class="mrow">
+        <div class="mf"><div class="ml">FTE comprometido</div><div class="mv">${i.fte?'-'+fmtN(i.fte)+' personas':'—'}</div></div>
+        <div class="mf"><div class="ml">Valor comprometido</div><div class="mv">${fmtCOP(i.cop)}</div></div>
+        <div class="mf"><div class="ml">Fecha</div><div class="mv">${i.fechaTxt}</div></div>
+      </div>
+      <div class="mrow">
+        <div class="mf"><div class="ml">Estado actual</div><select id="m-st" onchange="updRec('${id}')">${opts}</select></div>
+        <div class="mf"><div class="ml">FTE capturado real</div><input id="m-fte" type="number" step="0.5" min="0" value="${rec.fteCapturado||0}" onchange="updRec('${id}')"></div>
+        <div class="mf"><div class="ml">COP capturado (M)</div><input id="m-cop" type="number" step="1" min="0" value="${Math.round((rec.copCapturado||0)/1e6)}" onchange="updRec('${id}')"></div>
+      </div>
+      <span class="saved-note" id="saved-note">Guardado ✓</span>
+      <div class="seg-section-h">Bitácora de seguimiento</div>
+      <div class="seg-list">${segs}</div>
+      <div class="add-box">
+        <select id="seg-autor">${aopts}</select>
+        <textarea id="seg-txt" placeholder="Avance, decisión, bloqueo o próximo paso…"></textarea>
+        <div class="add-actions"><button class="btn ghost" onclick="closeModal()">Cerrar</button><button class="btn primary" onclick="addSeg('${id}')">Agregar nota</button></div>
+      </div>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+async function savePlan(id){
+  const txt=document.getElementById('edit-plan').value.trim();
+  if(!txt) return;
+  const i=DATA.find(x=>x.id===id);
+  i.plan=txt;
+  store[id].planOverride=txt;
+  if(API_URL&&API_OK){ await apiPost({action:'updatePlan',id,plan:txt}); }
+  await saveRec(id);
+  openModal(id,false);
+  render();
+}
+async function updRec(id){
+  store[id].status=document.getElementById('m-st').value;
+  store[id].fteCapturado=parseFloat(document.getElementById('m-fte').value)||0;
+  store[id].copCapturado=(parseFloat(document.getElementById('m-cop').value)||0)*1e6;
+  await saveRec(id);
+  const n=document.getElementById('saved-note'); if(n){n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1400);}
+  render();
+}
+async function addSeg(id){
+  const txt=document.getElementById('seg-txt').value.trim(); if(!txt) return;
+  const autor=document.getElementById('seg-autor').value;
+  const fecha=new Date().toLocaleDateString('es-CO',{year:'numeric',month:'short',day:'numeric'});
+  const seg={autor,fecha,txt};
+  store[id].segs.unshift(seg);
+  // Save seg to Sheets
+  if(API_URL&&API_OK){ await apiPost({action:'addSeg',id,seg}); }
+  await saveRec(id,autor); openModal(id); render();
+}
+async function cycleStatus(id){
+  const cur=store[id].status;
+  const next=STATUSES[(STATUSES.indexOf(cur)+1)%STATUSES.length];
+  store[id].status=next; await saveRec(id); render();
+}
+function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ── TABS & CHIPS ──
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); view=t.dataset.view; render(); });
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ const f=c.dataset.f; document.querySelectorAll(`.chip[data-f="${f}"]`).forEach(x=>x.classList.remove('on')); c.classList.add('on'); filter[f]=c.dataset.v; render(); });
+document.getElementById('overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
+
+// ── INIT ──
+(async()=>{ await loadStore(); render(); })();
+</script>
+</body>
+</html>

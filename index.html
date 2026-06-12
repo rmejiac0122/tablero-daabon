@@ -32,6 +32,10 @@ body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:
 .brand-sub{font-size:12px;color:#8CAEC8;margin-top:3px}
 .topbar-meta{text-align:right;font-size:11.5px;color:#6A94BE;padding-bottom:4px}
 .topbar-meta b{color:#A8C8E0}
+.user-select { display:flex; align-items:center; gap:8px; margin-right:20px; }
+.user-select select { background:var(--navy2); color:#fff; border:1px solid #6A94BE; padding:5px 10px; border-radius:6px; font-family:var(--font); font-size:12px; outline:none; cursor:pointer; }
+.user-select label { font-size:11px; color:#8CAEC8; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+
 .tabs{display:flex;gap:1px;margin-top:18px}
 .tab{padding:11px 22px;font-size:12.5px;font-weight:600;color:#7AAABF;cursor:pointer;border-radius:8px 8px 0 0;background:transparent;border:none;font-family:var(--font);letter-spacing:.2px;transition:.15s}
 .tab:hover{color:#fff;background:rgba(255,255,255,.07)}
@@ -90,6 +94,7 @@ th{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px
 td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
 tr.data-row:last-child td{border-bottom:none}
 tr.data-row:hover td{background:var(--skyBg)}
+tr.late-row td { background: #FFF4F4; }
 .dept-sep td{background:var(--navy2);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:8px 14px;border-bottom:none}
 .plan-text{color:var(--ink);line-height:1.45;max-width:380px}
 .plan-area{font-size:10.5px;color:var(--muted);margin-top:2px}
@@ -170,6 +175,7 @@ tr.data-row:hover td{background:var(--skyBg)}
 .mf .mv{font-size:14px;font-weight:700;color:var(--navy)}
 .mf select,.mf input[type=number]{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-family:var(--font);font-size:13px;color:var(--ink);background:var(--white)}
 .mf select:focus,.mf input:focus{outline:none;border-color:var(--sky)}
+.mf select:disabled,.mf input:disabled{background:var(--grayBg); cursor:not-allowed; opacity:0.8;}
 .seg-section-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:18px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
 .seg-list{display:flex;flex-direction:column;gap:9px;max-height:220px;overflow-y:auto;margin-bottom:14px}
 .seg-item{background:var(--paper);border-left:3px solid var(--sky);border-radius:0 8px 8px 0;padding:10px 14px}
@@ -211,51 +217,6 @@ tr.data-row:hover td{background:var(--skyBg)}
 </head>
 <body>
 
-
-<!-- ═══════════════════════════════════════════════════════
-     CONFIGURACIÓN: Pega tu URL de Apps Script aquí abajo
-     ═══════════════════════════════════════════════════════ -->
-<div id="api-banner" style="background:#B87820;color:#fff;font-size:12px;font-weight:600;padding:8px 28px;display:flex;align-items:center;gap:12px">
-  ⚠️ Tablero en modo local. Para sincronizar con Google Sheets, haz clic en <strong>Configurar</strong>.
-  <button onclick="showApiConfig()" style="background:#fff;color:#B87820;border:none;padding:4px 12px;border-radius:5px;cursor:pointer;font-weight:700;font-size:12px">Configurar</button>
-  <span id="api-status" style="margin-left:auto"></span>
-</div>
-
-<div id="api-config-box" style="display:none;background:#172F52;color:#fff;padding:14px 28px;font-size:12.5px;align-items:center;gap:12px;flex-wrap:wrap">
-  <span style="font-weight:600">URL Apps Script:</span>
-  <input id="api-url-input" type="text" placeholder="https://script.google.com/macros/s/..." 
-    style="flex:1;min-width:300px;padding:7px 10px;border-radius:6px;border:none;font-size:12.5px;color:#1A2B3C">
-  <button id="btn-conectar" style="background:#3A82C4;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-weight:700">Conectar</button>
-  <button id="btn-cancelar" style="background:transparent;color:#8CAEC8;border:1px solid #8CAEC8;padding:7px 12px;border-radius:6px;cursor:pointer">Cancelar</button>
-</div>
-
-<script>
-// Inline early — runs before deferred scripts
-document.addEventListener('DOMContentLoaded', function(){
-  var API_URL_STORED = localStorage.getItem('daabon_api_url')||'';
-
-  document.getElementById('api-banner').querySelector('button').addEventListener('click', function(){
-    var box = document.getElementById('api-config-box');
-    var inp = document.getElementById('api-url-input');
-    inp.value = API_URL_STORED;
-    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  });
-
-  document.getElementById('btn-cancelar').addEventListener('click', function(){
-    document.getElementById('api-config-box').style.display = 'none';
-  });
-
-  document.getElementById('btn-conectar').addEventListener('click', function(){
-    var url = document.getElementById('api-url-input').value.trim();
-    if(!url){ alert('Por favor pega la URL del Apps Script.'); return; }
-    localStorage.setItem('daabon_api_url', url);
-    API_URL_STORED = url;
-    document.getElementById('api-config-box').style.display = 'none';
-    // Trigger full load with new URL — reload page so main script picks it up
-    location.reload();
-  });
-});
-</script>
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand-lock">
@@ -263,7 +224,20 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="brand-title">Tablero de Optimización 2026</div>
       <div class="brand-sub">Seguimiento a ejecución e impacto por vicepresidencia</div>
     </div>
-    <div class="topbar-meta">Valor total comprometido<br><b id="topbar-total">$6.334 M COP</b></div>
+    <div style="display:flex; align-items:flex-end; gap:20px; text-align:right;">
+      <div class="user-select">
+        <label>Usuario:</label>
+        <select id="user-role" onchange="changeRole()">
+          <option value="admin">Administrador (Ver/Editar Todo)</option>
+          <option value="VPDH">VP Desarrollo Humano</option>
+          <option value="VPE">VP Ejecutiva</option>
+          <option value="VPF">VP Financiera</option>
+          <option value="VLOP">VP Log. & Operaciones</option>
+          <option value="AUD">Auditoría</option>
+        </select>
+      </div>
+      <div class="topbar-meta">Valor total comprometido<br><b id="topbar-total">$6.334 M COP</b></div>
+    </div>
   </div>
   <div class="tabs">
     <button class="tab active" data-view="panel">Panel Ejecutivo</button>
@@ -302,7 +276,8 @@ const D=(y,m,d)=>new Date(y,m-1,d);
 const fromSerial=n=>{ const d=new Date(1899,11,30); d.setDate(d.getDate()+n); return d; };
 const fmtCOP=v=>{ if(!v||v===0) return '—'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'MM'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; return '$'+v.toLocaleString('es-CO'); };
 const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
-const TODAY=new Date(2026,5,4);
+
+const TODAY = new Date(); // Requisito 6: Fecha actual real para calcular retrasos
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
 const STATUSES=['Pendiente','En curso','Ejecutado'];
@@ -392,7 +367,7 @@ const DATA=[
   {id:'v-4',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidar actividades en la nueva Direccion Admisnistrariva y Financiera, mismas que actualmente estan repartidas en las empreas, actividades como novedades de nomina, cajas menores, apoyo al sistemas de gestion, recepcion de mercancia, cumplimientos regulatorios.',fecha:null,fechaTxt:'Sin fecha',fte:5,cop:258170395,status:'Pendiente'},
   {id:'v-5',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'01 · SAP Pagos Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:58800000,status:'Pendiente'},
   {id:'v-6',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'02 · Control de Combustible',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:240000000,status:'Pendiente'},
-  {id:'v-7',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'03 · Peajes Electrónicos Etapa 1',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:28000000,status:'Pendiente'},
+  {id:'v-7',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'03 · Peajes Electrónicos Etapa 1',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2800000,status:'Pendiente'},
   {id:'v-8',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'04 · Peajes Electrónicos Etapa 2',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2900000,status:'Pendiente'},
   {id:'v-9',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'05 · WhatsApp a Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:159900000,status:'Pendiente'},
   {id:'v-10',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'07 · Conciliación ECOLLET',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:4700000,status:'Pendiente'},
@@ -412,23 +387,26 @@ let store={};
 let filter={vp:'all',tipo:'all'};
 let view='panel';
 let cronoSub='timeline';
-let API_URL = '';
+let API_URL = 'https://script.google.com/macros/s/TU_URL_AQUI/exec'; // Pon tu enlace aquí
 let API_OK = false;
 
-try{ API_URL = localStorage.getItem('daabon_api_url')||''; }catch(e){}
+// Requisito 1: Lógica de Login por VP
+let currentUser = localStorage.getItem('daabon_role') || 'admin';
 
-function setApiStatus(ok, msg){
-  API_OK = ok;
-  const banner = document.getElementById('api-banner');
-  const btnConf = banner ? banner.querySelector('button') : null;
-  if(ok){
-    banner.style.background = '#2D7D5E';
-    banner.innerHTML = '✓ Conectado a Google Sheets — cambios sincronizados en tiempo real. <span style="margin-left:auto;font-size:11px;opacity:.8">'+API_URL.slice(0,60)+'…</span>';
-  } else {
-    banner.style.background = '#C03830';
-    if(btnConf) btnConf.textContent = 'Configurar';
-  }
+window.changeRole = function() {
+  currentUser = document.getElementById('user-role').value;
+  localStorage.setItem('daabon_role', currentUser);
+  render();
+};
+
+function canEdit(vp) {
+  return currentUser === 'admin' || currentUser === vp;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const roleSelect = document.getElementById('user-role');
+  if(roleSelect) roleSelect.value = currentUser;
+});
 
 async function apiGet(params){
   if(!API_URL) return null;
@@ -443,7 +421,6 @@ async function apiGet(params){
 async function apiPost(body){
   if(!API_URL) return null;
   try{
-    // Encode entire body as a single 'data' param to avoid size issues
     const params = new URLSearchParams({
       action: body.action,
       data: JSON.stringify(body)
@@ -454,7 +431,6 @@ async function apiPost(body){
 }
 
 async function loadStore(){
-  // Set defaults first
   for(const it of DATA){
     const isEjec = it.status==='Ejecutado';
     store[it.id] = {
@@ -466,10 +442,10 @@ async function loadStore(){
     };
   }
 
-  if(API_URL){
+  if(API_URL && API_URL.includes('macros/s/')){
     const data = await apiGet({action:'getAll'});
     if(data && !data.error){
-      setApiStatus(true);
+      API_OK = true;
       Object.keys(data.records).forEach(id => {
         const rec = data.records[id];
         if(!store[id]) store[id] = {status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null};
@@ -488,7 +464,6 @@ async function loadStore(){
         });
       }
     } else {
-      setApiStatus(false, 'Error de conexión');
       console.warn('Sheets error:', data);
     }
   }
@@ -498,7 +473,6 @@ async function saveRec(id, updatedBy){
   if(API_URL && API_OK){
     await apiPost({action:'saveRecord', id, record:{...store[id], updatedBy: updatedBy||''}});
   }
-  // Local fallback
   try{ await window.storage.set('daabon26:'+id, JSON.stringify(store[id]), false); }catch(e){}
 }
 
@@ -569,42 +543,59 @@ function renderSeguimiento(){
   items.forEach(i=>{ (byVP[i.vp]=byVP[i.vp]||{name:VP_NAMES[i.vp],depts:{}}); (byVP[i.vp].depts[i.dept]=byVP[i.vp].depts[i.dept]||[]).push(i); });
 
   let html='';
-  let showNuevaForm = false;
-
   Object.keys(byVP).forEach(vp=>{
     const {name,depts}=byVP[vp];
     let rows='';
+    const editable = canEdit(vp); // Permiso para botones directos
+
     Object.keys(depts).forEach(dept=>{
-      rows+=`<tr class="dept-sep"><td colspan="7">▸ ${dept}</td></tr>`;
+      rows+=`<tr class="dept-sep"><td colspan="8">▸ ${dept}</td></tr>`;
       depts[dept].forEach(i=>{
         const rec=store[i.id];
         const sc=SC[rec.status]||'pend';
         const late=i.fecha&&i.fecha<TODAY&&!['Ejecutado','Ejecutado'].includes(rec.status);
         const ns=rec.segs.length;
-        rows+=`<tr class="data-row">
+        
+        // Requisito 5 y 6: Separar columnas de impacto y evaluar late para pintar fila de rojo
+        rows+=`<tr class="data-row ${late ? 'late-row' : ''}">
           <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
           <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tecnología':'Decisión'}</span></td>
-          <td><div class="impact-val">${i.fte?'-'+fmtN(i.fte)+' FTE':'—'}</div><div class="impact-sub">${fmtCOP(i.cop)}</div></td>
+          <td><div class="impact-val">${i.fte?'-'+fmtN(i.fte)+' FTE':'—'}</div></td>
+          <td><div class="impact-sub" style="font-weight:600">${fmtCOP(i.cop)}</div></td>
           <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
-          <td><button class="st-btn ${sc}" onclick="cycleStatus('${i.id}')">${rec.status}</button></td>
+          <td>
+            ${editable ? `<button class="st-btn ${sc}" onclick="cycleStatus('${i.id}')">${rec.status}</button>` 
+                       : `<span class="st-btn ${sc}" style="cursor:default">${rec.status}</span>`}
+          </td>
           <td><div class="impact-val">${rec.fteCapturado||0} FTE</div><div class="impact-sub">${fmtCOP(rec.copCapturado||0)}</div></td>
           <td><button class="seg-btn" onclick="openModal('${i.id}')">Bitácora${ns?`<span class="seg-count">${ns}</span>`:''}</button></td>
         </tr>`;
       });
     });
+    
     const vItems=items.filter(x=>x.vp===vp);
     const vCop=vItems.reduce((s,x)=>s+x.cop,0);
     const vDone=vItems.filter(x=>['Ejecutado','Ejecutado'].includes(store[x.id].status)).length;
+    
     html+=`<div class="sec-h" style="margin-top:${html?'24px':'0'}">
       <div class="sec-title">${name}</div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="sec-sub">${vDone}/${vItems.length} completadas · ${fmtCOP(vCop)}</span>
-        <button class="btn-nueva" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>
+        ${editable ? `<button class="btn-nueva" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>` : ''}
       </div>
     </div>
     <div id="nueva-form-${vp}"></div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th style="width:36%">Iniciativa</th><th>Tipo</th><th>Impacto</th><th>Fecha</th><th>Estado</th><th>Capturado</th><th>Bitácora</th></tr></thead>
+      <thead><tr>
+        <th style="width:30%">Iniciativa</th>
+        <th>Tipo</th>
+        <th>Imp. FTE</th>
+        <th>Imp. COP</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Capturado (FTE/COP)</th>
+        <th>Bitácora</th>
+      </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
   });
@@ -771,27 +762,35 @@ let editingPlan = false;
 function openModal(id, showEdit=false, requireNote=false){
   const i=DATA.find(x=>x.id===id);
   const rec=store[id];
-  const opts=['Pendiente','En curso','Ejecutado'].map(s=>`<option ${s===rec.status?'selected':''}>${s}</option>`).join('');
+  const editable = canEdit(i.vp); // Permisos
+
+  const opts=['Pendiente','En curso','Ejecutado'].map(s=>`<option value="${s}" ${s===rec.status?'selected':''} ${!editable?'disabled':''}>${s}</option>`).join('');
   const aopts=AUTHORS.map(a=>`<option>${a}</option>`).join('');
   const segs=rec.segs.length
     ? rec.segs.map(s=>`<div class="seg-item"><div class="si-meta"><b>${s.autor}</b><span>${s.fecha}</span></div><div class="si-txt">${esc(s.txt)}</div></div>`).join('')
     : '<div class="seg-empty">Sin seguimientos registrados aún.</div>';
-  const editPanel = showEdit ? `
+    
+  const editPanel = showEdit && editable ? `
     <div class="edit-box">
       <div class="edit-lbl">✏️ Editar iniciativa</div>
       <textarea id="edit-plan">${esc(i.plan)}</textarea>
-      <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">
+      
+      <div class="edit-lbl" style="margin-top:10px">Fecha compromiso</div>
+      <input type="date" id="edit-fecha" value="${i.fecha ? i.fecha.toISOString().split('T')[0] : ''}" style="width:100%; border:1.5px solid var(--amberLine); border-radius:7px; padding:6px 10px; font-family:var(--font); font-size:13px; background:var(--white);">
+      
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
         <button class="btn ghost" onclick="openModal('${id}',false)" style="font-size:12px;padding:6px 12px">Cancelar</button>
         <button class="btn primary" onclick="savePlan('${id}')" style="font-size:12px;padding:6px 12px;background:var(--amber)">Guardar cambio</button>
       </div>
     </div>` : '';
+
   document.getElementById('modal').innerHTML=`
     <div class="modal-top">
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="modal-tag">${VP_NAMES[i.vp]} · ${i.dept} · ${i.tipo==='Tecnologia'?'Tecnología':'Decisión/Proceso'}</div>
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-top:4px">
         <div class="modal-ttl" style="flex:1">${esc(i.plan)}</div>
-        <button class="edit-toggle" onclick="openModal('${id}',${!showEdit})">${showEdit?'✕ Cancelar':'✏️ Editar'}</button>
+        ${editable ? `<button class="edit-toggle" onclick="openModal('${id}',${!showEdit})">${showEdit?'✕ Cancelar':'✏️ Editar'}</button>` : ''}
       </div>
     </div>
     <div class="modal-body">
@@ -803,25 +802,32 @@ function openModal(id, showEdit=false, requireNote=false){
       </div>
       <div class="mrow">
         <div class="mf"><div class="ml">Estado actual</div><select id="m-st" onchange="updRec('${id}')">${opts}</select></div>
-        <div class="mf"><div class="ml">FTE capturado real</div><input id="m-fte" type="number" step="0.5" min="0" value="${rec.fteCapturado||0}" onchange="updRec('${id}')"></div>
-        <div class="mf"><div class="ml">COP capturado (M)</div><input id="m-cop" type="number" step="1" min="0" value="${Math.round((rec.copCapturado||0)/1e6)}" onchange="updRec('${id}')"></div>
+        <div class="mf"><div class="ml">FTE capturado real</div><input id="m-fte" type="number" step="0.5" min="0" value="${rec.fteCapturado||0}" onchange="updRec('${id}')" ${!editable?'disabled':''}></div>
+        <div class="mf"><div class="ml">COP capturado (M)</div><input id="m-cop" type="number" step="1" min="0" value="${Math.round((rec.copCapturado||0)/1e6)}" onchange="updRec('${id}')" ${!editable?'disabled':''}></div>
       </div>
       <span class="saved-note" id="saved-note">Guardado ✓</span>
       <div class="seg-section-h">Bitácora de seguimiento</div>
       <div class="seg-list">${segs}</div>
+      ${editable ? `
       <div class="add-box" id="add-box-${id}" style="${requireNote?'border:2px solid var(--amber);':''}">
-        ${requireNote?'<div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:8px">⚠️ Para pasar a En curso debes registrar con qué acción inicia esta iniciativa.</div>':''}
+        ${requireNote?'<div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:8px">⚠️ Para pasar a "En curso" debes registrar la bitácora inicial.</div>':''}
         <select id="seg-autor">${aopts}</select>
         <textarea id="seg-txt" placeholder="${requireNote?'Describe con qué acción inicia esta iniciativa…':'Avance, decisión, bloqueo o próximo paso…'}"></textarea>
         <div class="add-actions">
-          <button class="btn ghost" onclick="closeModal()">Cerrar</button>
+          <button class="btn ghost" onclick="${requireNote ? `revertStatus('${id}')` : `closeModal()`}">${requireNote ? 'Cancelar' : 'Cerrar'}</button>
           <button class="btn primary" onclick="${requireNote?`confirmEnCurso('${id}')`:`addSeg('${id}')`}">${requireNote?'Confirmar inicio':'Agregar nota'}</button>
         </div>
-      </div>
+      </div>` : '<div style="font-size:11px; color:var(--muted); font-style:italic;">No tienes permisos para agregar notas en esta VP.</div>'}
     </div>`;
   document.getElementById('overlay').classList.add('show');
 }
+
 function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+window.revertStatus = function(id) {
+  closeModal();
+  openModal(id, false, false);
+};
 
 async function confirmEnCurso(id){
   const txt=document.getElementById('seg-txt').value.trim();
@@ -843,46 +849,69 @@ async function confirmEnCurso(id){
 
 async function savePlan(id){
   const txt=document.getElementById('edit-plan').value.trim();
+  const dateVal=document.getElementById('edit-fecha').value;
   if(!txt) return;
   const i=DATA.find(x=>x.id===id);
+  
   i.plan=txt;
   store[id].planOverride=txt;
-  if(API_URL&&API_OK){ await apiPost({action:'updatePlan',id,plan:txt}); }
+  
+  if (dateVal) {
+    const [y, m, d] = dateVal.split('-');
+    i.fecha = new Date(y, m-1, d);
+    i.fechaTxt = `${d}/${m}/${y}`;
+  } else {
+    i.fecha = null;
+    i.fechaTxt = 'Sin fecha';
+  }
+
+  if(API_URL&&API_OK){ await apiPost({action:'updatePlan',id,plan:txt, fecha:dateVal}); }
   await saveRec(id);
   openModal(id,false);
   render();
 }
+
 async function updRec(id){
-  store[id].status=document.getElementById('m-st').value;
+  const newSt = document.getElementById('m-st').value;
+  
+  // Requisito 2: Forzar bitácora cuando pase a 'En curso'
+  if (newSt === 'En curso' && store[id].status !== 'En curso') {
+    document.getElementById('m-st').value = store[id].status;
+    closeModal();
+    openModal(id, false, true); 
+    return;
+  }
+
+  store[id].status=newSt;
   store[id].fteCapturado=parseFloat(document.getElementById('m-fte').value)||0;
   store[id].copCapturado=(parseFloat(document.getElementById('m-cop').value)||0)*1e6;
   await saveRec(id);
   const n=document.getElementById('saved-note'); if(n){n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1400);}
   render();
 }
+
 async function addSeg(id){
   const txt=document.getElementById('seg-txt').value.trim(); if(!txt) return;
   const autor=document.getElementById('seg-autor').value;
   const fecha=new Date().toLocaleDateString('es-CO',{year:'numeric',month:'short',day:'numeric'});
   const seg={autor,fecha,txt};
   store[id].segs.unshift(seg);
-  // Save seg to Sheets
   if(API_URL&&API_OK){ await apiPost({action:'addSeg',id,seg}); }
   await saveRec(id,autor); openModal(id); render();
 }
+
 async function cycleStatus(id){
   const cur=store[id].status;
-  // Skip Atrasado in cycle - it's automatic
   const cycleStates=['Pendiente','En curso','Ejecutado'];
   const idx=cycleStates.indexOf(cur==='Atrasado'?'Pendiente':cur);
   const next=cycleStates[(idx+1)%cycleStates.length];
   if(next==='En curso'){
-    // Open modal and require a bitacora note before saving
     openModal(id, false, true);
     return;
   }
   store[id].status=next; await saveRec(id); render();
 }
+
 function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 // ── TABS & CHIPS ──

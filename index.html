@@ -549,14 +549,15 @@ function renderSeguimiento(){
     const editable = canEdit(vp); // Permiso para botones directos
 
     Object.keys(depts).forEach(dept=>{
-      rows+=`<tr class="dept-sep"><td colspan="8">▸ ${dept}</td></tr>`;
+      // Ajustado el colspan a 9 por las nuevas columnas
+      rows+=`<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
       depts[dept].forEach(i=>{
         const rec=store[i.id];
         const sc=SC[rec.status]||'pend';
         const late=(!i.fecha||i.fecha<TODAY)&&!['Ejecutado','Ejecutado'].includes(rec.status);
         const ns=rec.segs.length;
         
-        // Separar columnas de impacto y evaluar late para pintar fila de rojo
+        // Celdas separadas de FTE Cap. y COP Cap.
         rows+=`<tr class="data-row ${late ? 'late-row' : ''}">
           <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
           <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tecnología':'Decisión'}</span></td>
@@ -567,7 +568,8 @@ function renderSeguimiento(){
             ${editable ? `<button class="st-btn ${sc}" onclick="cycleStatus('${i.id}')">${rec.status}</button>` 
                        : `<span class="st-btn ${sc}" style="cursor:default">${rec.status}</span>`}
           </td>
-          <td><div class="impact-val">${rec.fteCapturado||0} FTE</div><div class="impact-sub">${fmtCOP(rec.copCapturado||0)}</div></td>
+          <td><div class="impact-val" style="color:var(--green)">${rec.fteCapturado||0} FTE</div></td>
+          <td><div class="impact-sub" style="font-weight:600; color:var(--green)">${fmtCOP(rec.copCapturado||0)}</div></td>
           <td><button class="seg-btn" onclick="openModal('${i.id}')">Bitácora${ns?`<span class="seg-count">${ns}</span>`:''}</button></td>
         </tr>`;
       });
@@ -587,13 +589,14 @@ function renderSeguimiento(){
     <div id="nueva-form-${vp}"></div>
     <div class="tbl-wrap"><table>
       <thead><tr>
-        <th style="width:30%">Iniciativa</th>
+        <th style="width:28%">Iniciativa</th>
         <th>Tipo</th>
         <th>Imp. FTE</th>
         <th>Imp. COP</th>
         <th>Fecha</th>
         <th>Estado</th>
-        <th>Capturado (FTE/COP)</th>
+        <th>FTE Cap.</th>
+        <th>COP Cap.</th>
         <th>Bitácora</th>
       </tr></thead>
       <tbody>${rows}</tbody>

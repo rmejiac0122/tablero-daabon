@@ -277,11 +277,11 @@ const fromSerial=n=>{ const d=new Date(1899,11,30); d.setDate(d.getDate()+n); re
 const fmtCOP=v=>{ if(!v||v===0) return '—'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'MM'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; return '$'+v.toLocaleString('es-CO'); };
 const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
 
-const TODAY = new Date(); // Requisito 6: Fecha actual real para calcular retrasos
+const TODAY = new Date();
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
 const STATUSES=['Pendiente','En curso','Ejecutado'];
-const SC={'Ejecutado':'done','Ejecutado':'done','En curso':'prog','Pendiente':'pend','Bloqueado':'block'};
+const SC={'Ejecutado':'done','En curso':'prog','Pendiente':'pend','Bloqueado':'block'};
 const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
 
 // ── DATA ──
@@ -521,7 +521,7 @@ function renderPanel(){
       <div class="kpi k0"><div class="kpi-num">${total}</div><div class="kpi-lbl">Iniciativas</div><div class="kpi-det">${done} completadas · ${prog} en curso · ${block} bloqueadas</div></div>
       <div class="kpi k1"><div class="kpi-num">${fmtCOP(copTotal)}</div><div class="kpi-lbl">COP comprometido</div><div class="kpi-det">Capturado: <b>${fmtCOP(copCap)}</b></div></div>
       <div class="kpi k2"><div class="kpi-num">${fteTotal}</div><div class="kpi-lbl">Personas comprometidas</div><div class="kpi-det">Capturadas: <b>${fteCap} personas</b></div></div>
-      <div class="kpi k4"><div class="kpi-num">${all.filter(i=>i.fecha&&i.fecha<TODAY&&!['Ejecutado','Ejecutado'].includes(store[i.id].status)).length}</div><div class="kpi-lbl">Vencidas sin cerrar</div><div class="kpi-det">Requieren atención inmediata</div></div>
+      <div class="kpi k4"><div class="kpi-num">${all.filter(i=>(!i.fecha||i.fecha<TODAY)&&!['Ejecutado','Ejecutado'].includes(store[i.id].status)).length}</div><div class="kpi-lbl">Atrasadas / Sin Fecha</div><div class="kpi-det">Requieren atención inmediata</div></div>
     </div>
     <div class="sec-h"><div class="sec-title">Avance por Vicepresidencia</div><div class="sec-sub">Clic para filtrar</div></div>
     <div class="vp-grid">${vpCards}</div>
@@ -553,10 +553,10 @@ function renderSeguimiento(){
       depts[dept].forEach(i=>{
         const rec=store[i.id];
         const sc=SC[rec.status]||'pend';
-        const late=i.fecha&&i.fecha<TODAY&&!['Ejecutado','Ejecutado'].includes(rec.status);
+        const late=(!i.fecha||i.fecha<TODAY)&&!['Ejecutado','Ejecutado'].includes(rec.status);
         const ns=rec.segs.length;
         
-        // Requisito 5 y 6: Separar columnas de impacto y evaluar late para pintar fila de rojo
+        // Separar columnas de impacto y evaluar late para pintar fila de rojo
         rows+=`<tr class="data-row ${late ? 'late-row' : ''}">
           <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
           <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tecnología':'Decisión'}</span></td>
@@ -682,16 +682,16 @@ function renderCronograma(){
   const leg=`<div class="leg">
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--greenBg);border:1.5px solid var(--greenLine);margin-right:4px"></span>Completado</span>
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1.5px solid var(--line);margin-right:4px"></span>Pendiente / En curso</span>
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado / Sin Fecha</span>
     <span style="margin-left:auto;font-size:11px">Clic para abrir bitácora</span>
   </div>`;
   document.getElementById('content').innerHTML=switcher+body+leg;
 }
 
 function tlColor(i){
-  const st=store[i.id].status;
+  const st = store[i.id].status;
   if(['Ejecutado','Ejecutado'].includes(st)) return 'tl-done';
-  if(i.fecha && i.fecha<TODAY && !['Ejecutado','Ejecutado'].includes(st)) return 'tl-late';
+  if(!i.fecha || i.fecha < TODAY) return 'tl-late';
   return 'tl-pend';
 }
 function tlImpact(i){
@@ -737,10 +737,10 @@ function buildTL(arr,label,val){
 }
 
 function buildLista(arr,label){
-  const sorted=[...arr].sort((a,b)=>{ if(!a.fecha&&!b.fecha) return 0; if(!a.fecha) return 1; if(!b.fecha) return -1; return a.fecha-b.fecha; });
+  const sorted=[...arr].sort((a,b)=>{ if(!a.fecha&&!b.fecha) return 0; if(!a.fecha) return -1; if(!b.fecha) return 1; return a.fecha-b.fecha; });
   const rows=sorted.map(i=>{
     const sc=SC[store[i.id].status]||'pend';
-    const late=i.fecha&&i.fecha<TODAY&&!['Ejecutado','Ejecutado'].includes(store[i.id].status);
+    const late=(!i.fecha || i.fecha < TODAY) && !['Ejecutado','Ejecutado'].includes(store[i.id].status);
     return `<tr onclick="openModal('${i.id}')">
       <td><b>${i.dept}</b></td>
       <td style="max-width:340px">${i.plan.length>70?i.plan.slice(0,68)+'…':i.plan}</td>
@@ -874,7 +874,7 @@ async function savePlan(id){
 async function updRec(id){
   const newSt = document.getElementById('m-st').value;
   
-  // Requisito 2: Forzar bitácora cuando pase a 'En curso'
+  // Forzar bitácora cuando pase a 'En curso'
   if (newSt === 'En curso' && store[id].status !== 'En curso') {
     document.getElementById('m-st').value = store[id].status;
     closeModal();

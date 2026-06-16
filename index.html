@@ -159,6 +159,7 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .tl-nd-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
 .tl-nd-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
 .tl-nd-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
+
 /* lista crono */
 .lista-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
 .lista-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
@@ -201,7 +202,6 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 </head>
 <body>
 
-<!-- ── PANTALLA LOGIN ── -->
 <div class="auth-wrapper" id="login-screen">
   <div class="auth-box">
     <h2>Tablero de Optimización</h2>
@@ -226,7 +226,6 @@ tr.archived-row .plan-text { text-decoration: line-through; }
   </div>
 </div>
 
-<!-- ── PANTALLA CAMBIO CONTRASEÑA ── -->
 <div class="auth-wrapper" id="change-pwd-screen" style="display:none;">
   <div class="auth-box">
     <h2>Seguridad Obligatoria</h2>
@@ -244,7 +243,6 @@ tr.archived-row .plan-text { text-decoration: line-through; }
   </div>
 </div>
 
-<!-- ── APLICACIÓN PRINCIPAL ── -->
 <div id="app-wrapper">
   <div class="topbar">
     <div class="topbar-inner">
@@ -306,6 +304,7 @@ const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financier
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 // Base estática de datos
+// ⚠️ IMPORTANTE: NUNCA CAMBIES LOS "id" (dh-1, e-1, etc.) DE ESTAS FILAS, SINO SE PERDERÁ SU HISTORIAL EN LA BASE DE DATOS
 const DATA_BASE = [
   {id:'dh-1',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'En este caso se hizo un ajuste a la coordinadora líder de nomina (Salario Básico y Gasto de Transporte). Cargo no remplazado. Se hizo una prestación de servicios hasta diciembre monto de $ 4.500.000',fecha:D(2026,1,31),fechaTxt:'31/01/2026',fte:null,cop:175658808,status:'Ejecutado'},
   {id:'dh-2',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'La persona saliente, tenía un BPR asignado de $500.000, éstos fueron otorgados a Mariana García (Profesional Senior Atracción de Talentos)',fecha:D(2026,3,15),fechaTxt:'15/03/2026',fte:null,cop:67601808,status:'Ejecutado'},
@@ -413,8 +412,13 @@ let cronoSub='timeline';
 let sessionRole = sessionStorage.getItem('daabon_role') || null;
 let sessionPass = sessionStorage.getItem('daabon_pass') || null;
 
-// ── SISTEMA DE LOGIN ──
+// ── SISTEMA DE LOGIN Y SEGURIDAD ──
+// Auto-inyecta las credenciales en cada petición para blindar la base de datos
 async function apiCall(action, paramsObj) {
+  if (sessionRole && sessionPass) {
+    paramsObj.role = sessionRole;
+    paramsObj.password = sessionPass;
+  }
   const url = API_URL + '?' + new URLSearchParams({ action, data: JSON.stringify(paramsObj) });
   const req = await fetch(url);
   return await req.json();
@@ -493,8 +497,7 @@ async function initApp() {
     filter.vp = sessionRole;
   }
 
-  // Cargar datos reales desde Google Sheets
-  const res = await apiCall('getAll', { role: sessionRole, password: sessionPass });
+  const res = await apiCall('getAll', {}); // El auto-inyector pone el role y pass
   if(!res.ok) { logout(); return; }
 
   // Preparar Store
@@ -524,12 +527,16 @@ async function initApp() {
 
   res.customs.forEach(init => {
     if(!DATA.find(x => x.id === init.id)){
-      DATA.push({...init, fecha: init.fechaTxt !== 'Sin fecha' ? new Date(init.fechaTxt.split('/').reverse().join('-')) : null});
+      let fechaObj = null;
+      if (init.fechaTxt !== 'Sin fecha') {
+        const [d, m, y] = init.fechaTxt.split('/');
+        fechaObj = new Date(y, m-1, d);
+      }
+      DATA.push({...init, fecha: fechaObj});
       if(!store[init.id]) store[init.id]={status:init.status, fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null};
     }
   });
 
-  // Mostrar la App y Renderizar
   document.getElementById('app-wrapper').style.display = 'block';
   render();
 }
@@ -552,7 +559,6 @@ function render(){
 
 function renderPanel(){
   const all = filtered();
-  // Ignorar Archivadas para los KPIs
   const activas = all.filter(i => store[i.id].status !== 'Archivada');
   const total = activas.length;
   const done = activas.filter(i => store[i.id].status === 'Ejecutado').length;
@@ -615,7 +621,6 @@ function renderSeguimiento(){
     let rows = '';
     
     Object.keys(depts).forEach(dept => {
-      // Ajuste a 9 columnas para que la fila departamental cubra la tabla entera
       rows += `<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
       depts[dept].forEach(i => {
         const rec = store[i.id];
@@ -686,10 +691,18 @@ async function guardarNueva(vp){
   const cop = (parseFloat(document.getElementById('nf-cop').value)||0)*1e6;
   const fVal = document.getElementById('nf-fecha').value;
   
+  let fechaObj = null;
+  let fTxt = 'Sin fecha';
+  if(fVal) {
+    const [y,m,d] = fVal.split('-');
+    fechaObj = new Date(y, m-1, d);
+    fTxt = `${d}/${m}/${y}`;
+  }
+
   const id = 'custom-'+Date.now();
-  const init = { id, vp, dept, area:dept, tipo, plan, fechaTxt: fVal||'Sin fecha', fte, cop, status:'Pendiente' };
+  const init = { id, vp, dept, area:dept, tipo, plan, fechaTxt: fTxt, fte, cop, status:'Pendiente' };
   
-  DATA.push({...init, fecha: fVal ? new Date(fVal) : null});
+  DATA.push({...init, fecha: fechaObj});
   store[id] = { status:'Pendiente', fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null };
   
   await apiCall('saveNew', { initiative: init });
@@ -805,7 +818,6 @@ function openModal(id, isEditMode) {
   let bodyHtml = '';
 
   if(isEditMode) {
-    // MODO EDICIÓN (Lápiz)
     bodyHtml = `
       <div class="edit-box">
         <label style="font-size:10px;font-weight:700;color:var(--amber)">PLAN DE ACCIÓN</label>
@@ -828,7 +840,6 @@ function openModal(id, isEditMode) {
       </div>
     `;
   } else {
-    // MODO LECTURA / SEGUIMIENTO
     bodyHtml = `
       <div class="mrow" style="background:var(--paper); padding:12px; border-radius:8px; border:1px solid var(--line)">
         <div class="mf"><div class="ml">Estado</div><div class="mv" style="color:${rec.status==='Archivada'?'var(--gray)':'var(--navy)'}">${rec.status}</div></div>
@@ -878,24 +889,21 @@ async function saveEdits(id) {
   if(dateVal) { const [y,m,d] = dateVal.split('-'); i.fecha = new Date(y, m-1, d); i.fechaTxt = `${d}/${m}/${y}`; } 
   else { i.fecha = null; i.fechaTxt = 'Sin fecha'; }
 
-  await apiCall('updatePlan', { id, plan: txt, fecha: dateVal });
+  // Hemos optimizado para hacer un solo guardado maestro
   await saveRec(id);
   closeModal(); render();
 }
 
 async function addSeg(id) {
   const txt = document.getElementById('seg-txt').value.trim(); if(!txt) return;
-  
-  // Automáticamente el autor es el usuario conectado
   const autor = sessionRole === 'admin' ? 'Administrador' : VP_NAMES[sessionRole];
   const fecha = new Date().toLocaleDateString('es-CO');
   
   store[id].segs.unshift({ autor, fecha, txt });
+  if(store[id].status === 'Pendiente') store[id].status = 'En curso'; 
   
-  // Si estaba pendiente, pasa a En curso al recibir la primera nota.
-  if(store[id].status === 'Pendiente') { store[id].status = 'En curso'; await saveRec(id); }
-  
-  await apiCall('addSeg', { id, seg: { autor, fecha, txt } });
+  // Hemos optimizado: el saveRec envía toda la fila y el nuevo segmento al tiempo.
+  await saveRec(id);
   closeModal(); render();
 }
 
@@ -904,7 +912,6 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ document.querySelec
 document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ const f=c.dataset.f; document.querySelectorAll(`.chip[data-f="${f}"]`).forEach(x=>x.classList.remove('on')); c.classList.add('on'); filter[f]=c.dataset.v; render(); });
 document.getElementById('overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
 
-// Si ya hay sesión guardada en memoria, arranca directo. Si no, muestra login.
 if(sessionRole && sessionPass) { initApp(); } 
 else { document.getElementById('login-screen').style.display = 'flex'; }
 </script>

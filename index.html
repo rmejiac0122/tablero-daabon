@@ -438,7 +438,8 @@ async function loadStore(){
       fteCapturado: isEjec&&it.fte ? it.fte : 0,
       copCapturado: isEjec&&it.cop ? it.cop : 0,
       segs: [],
-      planOverride: null
+      planOverride: null,
+      fechaOverride: null
     };
   }
 
@@ -448,18 +449,33 @@ async function loadStore(){
       API_OK = true;
       Object.keys(data.records).forEach(id => {
         const rec = data.records[id];
-        if(!store[id]) store[id] = {status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null};
+        if(!store[id]) store[id] = {status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null, fechaOverride:null};
         if(rec.status) store[id].status = rec.status;
         if(rec.fteCapturado != null) store[id].fteCapturado = Number(rec.fteCapturado)||0;
         if(rec.copCapturado != null) store[id].copCapturado = Number(rec.copCapturado)||0;
-        if(rec.planOverride){ store[id].planOverride = rec.planOverride; const it=DATA.find(x=>x.id===id); if(it) it.plan=rec.planOverride; }
+        
+        // Inyectar datos guardados
+        if(rec.planOverride){ 
+          store[id].planOverride = rec.planOverride; 
+          const it=DATA.find(x=>x.id===id); 
+          if(it) it.plan=rec.planOverride; 
+        }
+        if(rec.fechaOverride){ 
+          store[id].fechaOverride = rec.fechaOverride;
+          const it=DATA.find(x=>x.id===id);
+          if(it){
+            const [y, m, d] = rec.fechaOverride.split('-');
+            it.fecha = new Date(y, m-1, d);
+            it.fechaTxt = `${d}/${m}/${y}`;
+          }
+        }
         if(rec.segs && rec.segs.length) store[id].segs = rec.segs;
       });
       if(data.customs && data.customs.length){
         data.customs.forEach(init=>{
           if(!DATA.find(x=>x.id===init.id)){
             DATA.push({...init, fecha:null});
-            if(!store[init.id]) store[init.id]={status:init.status,fteCapturado:0,copCapturado:0,segs:[],planOverride:null};
+            if(!store[init.id]) store[init.id]={status:init.status,fteCapturado:0,copCapturado:0,segs:[],planOverride:null, fechaOverride:null};
           }
         });
       }
@@ -546,10 +562,9 @@ function renderSeguimiento(){
   Object.keys(byVP).forEach(vp=>{
     const {name,depts}=byVP[vp];
     let rows='';
-    const editable = canEdit(vp); // Permiso para botones directos
+    const editable = canEdit(vp);
 
     Object.keys(depts).forEach(dept=>{
-      // Ajustado el colspan a 9 por las nuevas columnas
       rows+=`<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
       depts[dept].forEach(i=>{
         const rec=store[i.id];
@@ -557,7 +572,6 @@ function renderSeguimiento(){
         const late=(!i.fecha||i.fecha<TODAY)&&!['Ejecutado','Ejecutado'].includes(rec.status);
         const ns=rec.segs.length;
         
-        // Celdas separadas de FTE Cap. y COP Cap.
         rows+=`<tr class="data-row ${late ? 'late-row' : ''}">
           <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
           <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tecnología':'Decisión'}</span></td>
@@ -658,7 +672,7 @@ async function guardarNueva(vp){
   const newInit={id,vp,dept,area,tipo,plan,fechaTxt,fte,cop,status};
   DATA.push({...newInit,fecha});
   const isEjec=status==='Ejecutado';
-  store[id]={status,fteCapturado:isEjec&&fte?fte:0,copCapturado:isEjec&&cop?cop:0,segs:[],planOverride:null};
+  store[id]={status,fteCapturado:isEjec&&fte?fte:0,copCapturado:isEjec&&cop?cop:0,segs:[],planOverride:null,fechaOverride:null};
   if(API_URL&&API_OK){ await apiPost({action:'saveNew',initiative:{...newInit,createdBy:'Usuario'}}); }
   await saveRec(id);
   render();
@@ -858,6 +872,7 @@ async function savePlan(id){
   
   i.plan=txt;
   store[id].planOverride=txt;
+  store[id].fechaOverride=dateVal;
   
   if (dateVal) {
     const [y, m, d] = dateVal.split('-');

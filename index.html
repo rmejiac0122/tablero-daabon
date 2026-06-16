@@ -127,6 +127,48 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .edit-icon-btn{background:transparent; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; margin-left:4px; font-size:12px; transition:0.15s;}
 .edit-icon-btn:hover{background:var(--amberBg); border-color:var(--amberLine);}
 
+/* ── CRONOGRAMA ── */
+.crono-switch{display:flex;gap:6px;margin-bottom:16px}
+.c-btn{padding:7px 16px;font-size:12.5px;font-weight:600;border-radius:7px;border:1.5px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;font-family:var(--font);transition:.15s}
+.c-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.tl-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.tl-vp{color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.5px;text-transform:uppercase}
+.tl-vp-val{font-family:var(--mono);font-size:11.5px;color:#8CAEC8}
+.tl-scroll{overflow-x:auto;padding:12px 16px 16px}
+.tl-track{position:relative;min-width:900px}
+.tl-months{display:grid;grid-template-columns:repeat(12,1fr)}
+.tl-m{text-align:center;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px}
+.tl-line{height:2px;background:var(--line);border-radius:2px;margin-bottom:0;position:relative}
+.tl-line-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--green),var(--sky));border-radius:2px;transition:.6s}
+.tl-cols{display:grid;grid-template-columns:repeat(12,1fr);margin-top:0}
+.tl-col{position:relative;border-right:1px dashed #E8EFF5;padding-top:10px;min-height:60px}
+.tl-col:last-child{border-right:none}
+.tl-item{cursor:pointer;text-align:center;margin:0 2px 8px;transition:.15s}
+.tl-item:hover .tl-chip{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-chip{font-size:9.5px;font-weight:600;line-height:1.3;padding:4px 7px;border-radius:8px;background:var(--paper);border:1px solid var(--line);color:var(--ink);display:block;word-break:break-word;text-align:center;transition:.15s;min-width:72px}
+.tl-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
+.tl-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
+.tl-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
+.tl-chip .tl-dept{font-size:9.5px;font-weight:700;display:block;margin-bottom:2px}
+.tl-chip .tl-imp{font-size:8.5px;font-weight:600;opacity:.85;display:block}
+.tl-nodate{padding:8px 16px 12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tl-nd-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tl-nd-chip{font-size:11px;padding:3px 10px;border-radius:20px;cursor:pointer;font-weight:500;border:1px solid var(--line);background:var(--paper);color:var(--mid);transition:.15s}
+.tl-nd-chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tl-nd-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
+.tl-nd-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
+.tl-nd-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
+/* lista crono */
+.lista-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.lista-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.lista-vp{color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.5px;text-transform:uppercase}
+.lista-tbl{width:100%;border-collapse:collapse}
+.lista-tbl th{background:var(--paper);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--line);text-align:left}
+.lista-tbl td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:middle}
+.lista-tbl tr:last-child td{border-bottom:none}
+.lista-tbl tr:hover td{background:var(--skyBg);cursor:pointer}
+
 /* ── MODAL ── */
 .overlay{position:fixed;inset:0;background:rgba(10,25,50,.6);display:none;align-items:flex-start;justify-content:center;padding:36px 16px;z-index:100;overflow-y:auto;backdrop-filter:blur(3px)}
 .overlay.show{display:flex}
@@ -219,6 +261,7 @@ tr.archived-row .plan-text { text-decoration: line-through; }
     <div class="tabs">
       <button class="tab active" data-view="panel">Panel Ejecutivo</button>
       <button class="tab" data-view="seguimiento">Seguimientos</button>
+      <button class="tab" data-view="cronograma">Cronograma</button>
     </div>
   </div>
 
@@ -260,6 +303,7 @@ const TODAY = new Date();
 const STATUSES=['Pendiente','En curso','Ejecutado','Archivada'];
 const SC={'Ejecutado':'done','En curso':'prog','Pendiente':'pend','Archivada':'archived'};
 const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
+const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 // Base estática de datos
 const DATA_BASE = [
@@ -363,6 +407,7 @@ let DATA = [];
 let store={};
 let filter={vp:'all',tipo:'all'};
 let view='panel';
+let cronoSub='timeline';
 
 // Credenciales
 let sessionRole = sessionStorage.getItem('daabon_role') || null;
@@ -501,7 +546,8 @@ function filtered(){
 function render(){ 
   document.getElementById('content').innerHTML=''; 
   if(view==='panel') renderPanel(); 
-  else renderSeguimiento(); 
+  else if(view==='seguimiento') renderSeguimiento();
+  else renderCronograma();
 }
 
 function renderPanel(){
@@ -649,6 +695,102 @@ async function guardarNueva(vp){
   await apiCall('saveNew', { initiative: init });
   render();
 }
+
+// ── CRONOGRAMA ──
+function renderCronograma(){
+  const items = filtered();
+  const vps = sessionRole === 'admin' ? ['VPDH','VPE','VPF','VLOP','AUD'] : [sessionRole];
+  
+  const switcher = `<div class="crono-switch">
+    <button class="c-btn ${cronoSub==='timeline'?'active':''}" onclick="setCronoSub('timeline')">🗓 Línea de tiempo</button>
+    <button class="c-btn ${cronoSub==='lista'?'active':''}" onclick="setCronoSub('lista')">☰ Lista</button>
+  </div>`;
+
+  let body = '';
+  vps.forEach(vp => {
+    const arr = items.filter(i => i.vp === vp && store[i.id].status !== 'Archivada');
+    if(!arr.length) return;
+    const cop = arr.reduce((s,i) => s + i.cop, 0);
+    if(cronoSub === 'timeline') body += buildTL(arr, VP_NAMES[vp], fmtCOP(cop));
+    else body += buildLista(arr, VP_NAMES[vp]);
+  });
+
+  const leg = `<div class="leg">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--greenBg);border:1.5px solid var(--greenLine);margin-right:4px"></span>Completado</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1.5px solid var(--line);margin-right:4px"></span>Pendiente / En curso</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado / Sin Fecha</span>
+    <span style="margin-left:auto;font-size:11px">Clic para abrir detalles</span>
+  </div>`;
+  document.getElementById('content').innerHTML = switcher + body + leg;
+}
+
+function tlColor(i){
+  const st = store[i.id].status;
+  if(['Ejecutado'].includes(st)) return 'tl-done';
+  if(!i.fecha || i.fecha < TODAY) return 'tl-late';
+  return 'tl-pend';
+}
+function tlImpact(i){
+  const parts=[];
+  if(i.fte) parts.push('-'+fmtN(i.fte)+' FTE');
+  if(i.cop) parts.push(fmtCOP(i.cop));
+  return parts.join(' · ')||'';
+}
+function buildTL(arr,label,val){
+  const buckets = Array.from({length:12},()=>[]);
+  const nodate = [];
+  arr.forEach(i => { if(i.fecha && i.fecha.getFullYear()===2026) buckets[i.fecha.getMonth()].push(i); else nodate.push(i); });
+  const maxStack = Math.max(...buckets.map(b=>b.length),1);
+  const tlH = Math.max(90, 16+maxStack*68+12);
+  const progPct = Math.round(arr.filter(i=>['Ejecutado'].includes(store[i.id].status)).length/arr.length*100) || 0;
+  
+  let cols='';
+  for(let m=0; m<12; m++){
+    let items2='';
+    buckets[m].forEach((i)=>{
+      const cls = tlColor(i);
+      const imp = tlImpact(i);
+      items2 += `<div class="tl-item" onclick="openModal('${i.id}', false)" title="${i.plan}">
+        <span class="tl-chip ${cls}"><span class="tl-dept">${i.dept}</span>${imp?`<span class="tl-imp">${imp}</span>`:''}</span>
+      </div>`;
+    });
+    cols+=`<div class="tl-col">${items2}</div>`;
+  }
+  const nd = nodate.length ? `<div class="tl-nodate"><span class="tl-nd-lbl">Sin fecha:</span>${nodate.map(i=>{
+    const cls=tlColor(i); const imp=tlImpact(i);
+    return `<span class="tl-nd-chip ${cls}" onclick="openModal('${i.id}', false)" title="${i.plan}">${i.dept}${imp?' · '+imp:''}</span>`;
+  }).join('')}</div>` : '';
+  
+  return `<div class="tl-wrap">
+    <div class="tl-head"><span class="tl-vp">${label}</span><span class="tl-vp-val">${val}</span></div>
+    <div class="tl-scroll"><div class="tl-track" style="height:${tlH+30}px">
+      <div class="tl-months">${MONTHS.map(m=>`<div class="tl-m">${m}</div>`).join('')}</div>
+      <div class="tl-line"><div class="tl-line-fill" style="width:${progPct}%"></div></div>
+      <div class="tl-cols" style="height:${tlH}px">${cols}</div>
+    </div></div>${nd}
+  </div>`;
+}
+
+function buildLista(arr,label){
+  const sorted = [...arr].sort((a,b)=>{ if(!a.fecha&&!b.fecha) return 0; if(!a.fecha) return -1; if(!b.fecha) return 1; return a.fecha-b.fecha; });
+  const rows = sorted.map(i=>{
+    const sc = SC[store[i.id].status] || 'pend';
+    const late = (!i.fecha || i.fecha < TODAY) && !['Ejecutado'].includes(store[i.id].status);
+    return `<tr onclick="openModal('${i.id}', false)">
+      <td><b>${i.dept}</b></td>
+      <td style="max-width:340px">${i.plan.length>70?i.plan.slice(0,68)+'…':i.plan}</td>
+      <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tec':'Proceso'}</span></td>
+      <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
+      <td><span class="st-btn ${sc}" style="cursor:default">${store[i.id].status}</span></td>
+    </tr>`;
+  }).join('');
+  return `<div class="lista-wrap">
+    <div class="lista-head"><span class="lista-vp">${label}</span></div>
+    <table class="lista-tbl"><thead><tr><th>Departamento</th><th>Iniciativa</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+
+function setCronoSub(v){ cronoSub=v; renderCronograma(); }
 
 // ── MODAL LÓGICA (LECTURA VS EDICIÓN) ──
 function openModal(id, isEditMode) {

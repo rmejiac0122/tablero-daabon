@@ -36,7 +36,7 @@ body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:
 .auth-btn:hover { background:var(--navy); }
 .auth-error { color:var(--red); font-size:12px; font-weight:600; margin-top:12px; display:none; }
 
-/* ── MAIN APP ── */
+/* ── MAIN APP (Hidden initially) ── */
 #app-wrapper { display:none; }
 
 /* ── TOPBAR ── */
@@ -170,21 +170,6 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .lista-tbl tr:last-child td{border-bottom:none}
 .lista-tbl tr:hover td{background:var(--skyBg);cursor:pointer}
 
-/* ── ENTORNO MÓVIL IPHONE CEO ── */
-.ceo-container { display:flex; flex-direction:column; gap:18px; max-width:500px; margin:0 auto; padding-bottom:90px; }
-.ceo-num-hero { font-family:var(--display); font-size:42px; color:var(--navy); line-height:1; margin:8px 0; }
-.ceo-ranking-card { background:var(--white); border:1px solid var(--line); border-radius:12px; padding:16px; }
-.ceo-ranking-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--paper); }
-.ceo-ranking-row:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
-.ceo-progress-mini { height:6px; background:var(--grayBg); border-radius:3px; flex:1; margin:0 14px; overflow:hidden;}
-.ceo-progress-fill { height:100%; background:linear-gradient(90deg, var(--amber), var(--green)); border-radius:3px; }
-.ceo-alert-card { background:#FFF5F5; border:1px solid var(--redLine); border-radius:12px; padding:16px; position:relative; overflow:hidden; }
-.ceo-alert-card.late { border-left:5px solid var(--red); }
-.ceo-alert-header { display:flex; justify-content:space-between; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
-.ceo-alert-title { font-size:14px; font-weight:600; color:var(--navy); line-height:1.3; margin-bottom:8px; }
-.ceo-alert-meta { display:flex; justify-content:space-between; font-family:var(--mono); font-size:13px; font-weight:600; color:var(--mid); }
-.ceo-floating-btn { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); width:85%; max-width:340px; background:var(--green); color:#fff; text-align:center; padding:16px; border-radius:30px; font-size:15px; font-weight:700; text-decoration:none; box-shadow:0 10px 25px rgba(45,125,94,0.4); z-index:99; display:block; border:none; cursor:pointer; font-family:var(--font); }
-
 /* ── MODAL ── */
 .overlay{position:fixed;inset:0;background:rgba(10,25,50,.6);display:none;align-items:flex-start;justify-content:center;padding:36px 16px;z-index:100;overflow-y:auto;backdrop-filter:blur(3px)}
 .overlay.show{display:flex}
@@ -225,7 +210,6 @@ tr.archived-row .plan-text { text-decoration: line-through; }
       <label>Vicepresidencia / Rol</label>
       <select id="login-role">
         <option value="admin">Administrador Global</option>
-        <option value="CEO">Presidente Ejecutivo (CEO)</option>
         <option value="VPDH">VP Desarrollo Humano</option>
         <option value="VPE">VP Ejecutiva</option>
         <option value="VPF">VP Financiera</option>
@@ -254,9 +238,7 @@ tr.archived-row .plan-text { text-decoration: line-through; }
       <label>Confirmar contraseña</label>
       <input type="password" id="new-pass-2" placeholder="Repite la contraseña">
     </div>
-    <div class="auth-actions" style="margin-top:16px">
-       <button class="auth-btn" onclick="doChangePwd()" id="btn-cambiar">Guardar y Continuar</button>
-    </div>
+    <button class="auth-btn" onclick="doChangePwd()" id="btn-cambiar">Guardar y Continuar</button>
     <div class="auth-error" id="pwd-error"></div>
   </div>
 </div>
@@ -321,12 +303,8 @@ const SC={'Ejecutado':'done','En curso':'prog','Pendiente':'pend','Archivada':'a
 const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
-// Lógica de Permisos de Edición Reintegrada
-function canEdit(vp) {
-  return sessionRole === 'admin' || sessionRole === vp;
-}
-
-// Base estática completa
+// Base estática de datos
+// ⚠️ IMPORTANTE: NUNCA CAMBIES LOS "id" (dh-1, e-1, etc.) DE ESTAS FILAS, SINO SE PERDERÁ SU HISTORIAL EN LA BASE DE DATOS
 const DATA_BASE = [
   {id:'dh-1',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'En este caso se hizo un ajuste a la coordinadora líder de nomina (Salario Básico y Gasto de Transporte). Cargo no remplazado. Se hizo una prestación de servicios hasta diciembre monto de $ 4.500.000',fecha:D(2026,1,31),fechaTxt:'31/01/2026',fte:null,cop:175658808,status:'Ejecutado'},
   {id:'dh-2',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'La persona saliente, tenía un BPR asignado de $500.000, éstos fueron otorgados a Mariana García (Profesional Senior Atracción de Talentos)',fecha:D(2026,3,15),fechaTxt:'15/03/2026',fte:null,cop:67601808,status:'Ejecutado'},
@@ -360,7 +338,7 @@ const DATA_BASE = [
   {id:'e-9',vp:'VPE',dept:'Sostenibilidad',area:'Certificaciones',tipo:'Proceso',plan:'Con la jubilación del Director de Certificaciones el puesto se elimina y el rol queda integrado a la Direccion de Sostenibilidad como una jefatura',fecha:D(2026,12,1),fechaTxt:'01/12/2026',fte:1,cop:253175634,status:'Pendiente'},
   {id:'e-10',vp:'VPE',dept:'Sostenibilidad',area:'Sostenibilidad',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Estandarizar el registro de actividades ambientales con un sistema de captura continua que genere automáticamente informes operativos y regulatorios (ICA).',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-11',vp:'VPE',dept:'SIG',area:'SIG',tipo:'Proceso',plan:'Pasar de un modelo asistencial a un modelo de control.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:3,cop:129600000,status:'Pendiente'},
-  {id(--tabla--):'e-12',vp:'VPE',dept:'SIG',area:'SIG/IT',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Seguimientos con escalamiento automático a Gerencias/VPs por incumplimiento, eliminando la gestión manual.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-12',vp:'VPE',dept:'SIG',area:'SIG/IT',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Seguimientos con escalamiento automático a Gerencias/VPs por incumplimiento, eliminando la gestión manual.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-13',vp:'VPE',dept:'La Samaria',area:'Administración y Almacenes',tipo:'Proceso',plan:'Desarrollar cargo fusionado de Coordinador Admin y Almacenes. Absorbiendo 2 coordinaciones en 1.',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:1,cop:66000000,status:'Pendiente'},
   {id:'e-14',vp:'VPE',dept:'La Samaria',area:'Administración',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Automatizar tareas manuales de alto volumen: conciliaciones con proveedores, informes de cierre y revisión de nómina operativa.',fecha:D(2026,8,1),fechaTxt:'01/08/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-15',vp:'VPE',dept:'Desarrollos IT',area:'Equipo Proyecto Optimización',tipo:'Proceso',plan:'Se acuerda participar en una reunión donde podamos exponer los hallazgos, así como tener al tanto al equipo del proyecto de optimizacion (Jaime y Roberto) de lo que se ejecuta y con quien se ejecuta.',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
@@ -380,7 +358,7 @@ const DATA_BASE = [
   {id:'e-29',vp:'VPE',dept:'Desarrollos IT',area:'Impuestos',tipo:'Tecnologia',plan:'Desarrollo tecnológico para pre-liquidar impuestos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-30',vp:'VPE',dept:'Desarrollos IT',area:'Impuestos',tipo:'Tecnologia',plan:'Desarrollo tecnológico que apoye la gestión de devolución de saldos a favor.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-31',vp:'VPE',dept:'Desarrollos IT',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Mejora de reportes en QlikSense para presentación en comités de cultivos y extractoras',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-32',vp:'VPE',dept:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar adiciones presupuestales aprobadas por las gerencias.',fecha:D(2026,6,12),fechaTxt:'12/06/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-32',vp:'VPE',dept:'Desarrollos IT',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar adiciones presupuestales aprobadas por las gerencias.',fecha:D(2026,6,12),fechaTxt:'12/06/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-1',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Proyecto Host to Host con bancos para reducir tiempos en programación de pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-2',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Desarrollar RPA o agente que contabilice automáticamente los pagos realizados en SAP.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:2,cop:105958832,status:'Pendiente'},
   {id:'f-3',vp:'VPF',dept:'Tesorería',area:'Tesoreria',tipo:'Proceso',plan:'Determinar si la trazabilidad de los pagos seguirá archivándose físicamente.',fecha:D(2026,7,30),fechaTxt:'30/07/2026',fte:1,cop:55975626,status:'Pendiente'},
@@ -410,7 +388,7 @@ const DATA_BASE = [
   {id:'v-5',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'01 · SAP Pagos Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:58800000,status:'Pendiente'},
   {id:'v-6',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'02 · Control de Combustible',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:240000000,status:'Pendiente'},
   {id:'v-7',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'03 · Peajes Electrónicos Etapa 1',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2800000,status:'Pendiente'},
-  {id:'v-8',vp:'VLOP',dept:'Elogia',area(--tabla--):'Elogia',tipo:'Tecnologia',plan:'04 · Peajes Electrónicos Etapa 2',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2900000,status:'Pendiente'},
+  {id:'v-8',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'04 · Peajes Electrónicos Etapa 2',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2900000,status:'Pendiente'},
   {id:'v-9',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'05 · WhatsApp a Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:159900000,status:'Pendiente'},
   {id:'v-10',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'07 · Conciliación ECOLLET',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:4700000,status:'Pendiente'},
   {id:'v-11',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'08 · Facturación Automática SILOGTRAN',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:13800000,status:'Pendiente'},
@@ -424,16 +402,18 @@ const DATA_BASE = [
   {id:'a-5',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Al momento del estudio se tenian 3 contrataciones (1 SR y 2 JR) en proceso, se detuvo la contratacion de 1 JUNIOR autorizandose solo la contratacion de 1 y se elimino la vacante pendiente.Quedando el equipo en 8 + 1 director',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:39203305,status:'Ejecutado'}
 ];
 
-// El resto de la lógica permanece intacta...
 let DATA = [];
 let store={};
 let filter={vp:'all',tipo:'all'};
 let view='panel';
 let cronoSub='timeline';
 
+// Credenciales
 let sessionRole = sessionStorage.getItem('daabon_role') || null;
 let sessionPass = sessionStorage.getItem('daabon_pass') || null;
 
+// ── SISTEMA DE LOGIN Y SEGURIDAD ──
+// Auto-inyecta las credenciales en cada petición para blindar la base de datos
 async function apiCall(action, paramsObj) {
   if (sessionRole && sessionPass) {
     paramsObj.role = sessionRole;
@@ -451,6 +431,7 @@ async function doLogin() {
   const err = document.getElementById('login-error');
   
   if(!pass) { err.textContent = 'Ingresa la contraseña'; err.style.display = 'block'; return; }
+  
   btn.textContent = 'Verificando...'; err.style.display = 'none';
   
   const res = await apiCall('login', { role, password: pass });
@@ -495,33 +476,31 @@ async function doChangePwd() {
   }
 }
 
-function logout() { sessionStorage.clear(); location.reload(); }
+function logout() {
+  sessionStorage.clear();
+  location.reload();
+}
 
+// ── INICIALIZACIÓN DE LA APP ──
 async function initApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('change-pwd-screen').style.display = 'none';
   
-  if(sessionRole === 'admin' || sessionRole === 'CEO') {
+  // Filtro inicial de seguridad visual en el frontend
+  if(sessionRole === 'admin') {
     DATA = [...DATA_BASE];
-    document.getElementById('top-vp-badge').textContent = sessionRole === 'admin' ? 'Global' : 'Radar CEO';
-    
-    if(sessionRole === 'CEO') {
-      view = 'ceo';
-      document.querySelector('.tabs').style.display = 'none';
-      document.getElementById('main-toolbar').style.display = 'none';
-    }
+    document.getElementById('top-vp-badge').textContent = 'Global';
   } else {
     DATA = DATA_BASE.filter(i => i.vp === sessionRole);
     document.getElementById('top-vp-badge').textContent = VP_NAMES[sessionRole];
-    document.getElementById('main-toolbar').style.display = 'none';
+    document.getElementById('vp-filters').style.display = 'none'; // Ocultar filtro VP
     filter.vp = sessionRole;
-    view = 'seguimiento';
-    document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); if(t.dataset.view === 'seguimiento') t.classList.add('active'); });
   }
 
-  const res = await apiCall('getAll', {});
+  const res = await apiCall('getAll', {}); // El auto-inyector pone el role y pass
   if(!res.ok) { logout(); return; }
 
+  // Preparar Store
   for(const it of DATA){
     store[it.id] = { status: it.status, fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null };
   }
@@ -562,83 +541,20 @@ async function initApp() {
   render();
 }
 
-async function saveRec(id) { await apiCall('saveRecord', { id, record: store[id] }); }
+async function saveRec(id) {
+  await apiCall('saveRecord', { id, record: store[id] });
+}
 
-function filtered(){ return DATA.filter(i=>(filter.vp==='all'||i.vp===filter.vp)&&(filter.tipo==='all'||i.tipo===filter.tipo)); }
+// ── RENDERIZADO ──
+function filtered(){ 
+  return DATA.filter(i=>(filter.vp==='all'||i.vp===filter.vp)&&(filter.tipo==='all'||i.tipo===filter.tipo)); 
+}
 
 function render(){ 
   document.getElementById('content').innerHTML=''; 
-  if(view==='ceo') renderCeoView();
-  else if(view==='panel') renderPanel(); 
+  if(view==='panel') renderPanel(); 
   else if(view==='seguimiento') renderSeguimiento();
   else renderCronograma();
-}
-
-function renderCeoView(){
-  const all = filtered();
-  const activas = all.filter(i => store[i.id].status !== 'Archivada');
-  
-  const copTotal = activas.reduce((s,i) => s + i.cop, 0);
-  const copCap = activas.reduce((s,i) => s + (store[i.id].copCapturado||0), 0);
-  const doneGlobal = activas.filter(i => store[i.id].status === 'Ejecutado').length;
-  const pctGlobal = activas.length ? Math.round(doneGlobal / activas.length * 100) : 0;
-
-  const vps = ['VPDH','VPE','VPF','VLOP','AUD'];
-  const ranking = vps.map(vp => {
-    const items = DATA.filter(i => i.vp === vp && store[i.id].status !== 'Archivada');
-    const done = items.filter(i => store[i.id].status === 'Ejecutado').length;
-    const pct = items.length ? Math.round(done / items.length * 100) : 0;
-    return { vp, name: VP_NAMES[vp], pct, total: items.length, done };
-  }).sort((a,b) => b.pct - a.pct);
-
-  const rankingHtml = ranking.map(r => `
-    <div class="ceo-ranking-row">
-      <div style="font-weight:600; width:70px; color:var(--navy)">${r.vp}</div>
-      <div class="ceo-progress-mini"><div class="ceo-progress-fill" style="width:${r.pct}%"></div></div>
-      <div style="font-family:var(--mono); font-weight:700; color:var(--green)">${r.pct}%</div>
-    </div>
-  `).join('');
-
-  const estancadas = all.filter(i => !['Ejecutado', 'Archivada'].includes(store[i.id].status))
-    .sort((a,b) => b.cop - a.cop)
-    .slice(0, 5);
-
-  let alertasHtml = '';
-  let mailBody = 'Estimado equipo de Vicepresidentes,\n\nRevisando el Radar de Alto Impacto Daabon 2026, requiero estatus urgente de las siguientes iniciativas críticas que presentan retrasos:\n\n';
-
-  if(estancadas.length) {
-    alertasHtml = estancadas.map((i, index) => {
-      const late = i.fecha && i.fecha < TODAY;
-      mailBody += `${index+1}. [${i.vp}] - ${i.plan.slice(0,60)}... Impacto comprometido: ${fmtCOP(i.cop)}\n`;
-      return `
-        <div class="ceo-alert-card ${late ? 'late' : ''}">
-          <div class="ceo-alert-header"><span>${i.vp} · ${i.dept}</span><span>${store[i.id].status}</span></div>
-          <div class="ceo-alert-title">${i.plan}</div>
-          <div class="ceo-alert-meta"><span>Comprometido: ${fmtCOP(i.cop)}</span><span style="color:${late?'var(--red)':'var(--muted)'}">${i.fechaTxt}</span></div>
-        </div>
-      `;
-    }).join('');
-  } else {
-    alertasHtml = '<p style="color:var(--muted); text-style:italic">No hay iniciativas de alto impacto pendientes.</p>';
-    mailBody += 'Todo marcha al día.';
-  }
-
-  mailBody += '\nQuedo atento a sus comentarios.\nSaludos,\nPresidente Ejecutivo';
-
-  document.getElementById('content').innerHTML = `
-    <div class="ceo-container">
-      <div class="ceo-ranking-card" style="text-align:center; background:linear-gradient(135deg, #0E2340, #172F52); color:#fff">
-        <div style="font-size:12px; font-weight:700; text-transform:uppercase; opacity:0.8">Termómetro de Ejecución 2026</div>
-        <div class="ceo-num-hero" style="color:#fff">${pctGlobal}%</div>
-        <div style="font-size:12px; opacity:0.9">Capturado: ${fmtCOP(copCap)} de ${fmtCOP(copTotal)}</div>
-      </div>
-      <div class="sec-title" style="margin-top:8px">Ranking de Cumplimiento</div>
-      <div class="ceo-ranking-card">${rankingHtml}</div>
-      <div class="sec-title" style="margin-top:8px; color:var(--red)">Top 5 Focos de Atención (Mayor COP)</div>
-      <div style="display:flex; flex-direction:column; gap:12px">${alertasHtml}</div>
-      <a class="ceo-floating-btn" href="mailto:comite@daabon.com?subject=URGENTE: Seguimiento a Iniciativas de Alto Impacto 2026&body=${encodeURIComponent(mailBody)}">✉️ Alertar a Vicepresidentes</a>
-    </div>
-  `;
 }
 
 function renderPanel(){
@@ -686,6 +602,14 @@ function renderPanel(){
   `;
 }
 
+function setVPFilter(vp){
+  filter.vp = vp;
+  document.querySelectorAll('.chip[data-f="vp"]').forEach(c => { c.classList.remove('on'); if(c.dataset.v === vp) c.classList.add('on'); });
+  view = 'seguimiento';
+  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); if(t.dataset.view === 'seguimiento') t.classList.add('active'); });
+  render();
+}
+
 function renderSeguimiento(){
   const items = filtered();
   const byVP = {};
@@ -695,7 +619,6 @@ function renderSeguimiento(){
   Object.keys(byVP).forEach(vp => {
     const {name, depts} = byVP[vp];
     let rows = '';
-    const editable = canEdit(vp);
     
     Object.keys(depts).forEach(dept => {
       rows += `<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
@@ -717,7 +640,7 @@ function renderSeguimiento(){
           <td><div class="impact-sub" style="font-weight:600; color:var(--green)">${fmtCOP(rec.copCapturado||0)}</div></td>
           <td style="white-space:nowrap">
             <button class="seg-btn" onclick="openModal('${i.id}', false)">Seguimiento ${ns?`(${ns})`:''}</button>
-            ${editable ? `<button class="edit-icon-btn" onclick="openModal('${i.id}', true)" title="Editar">✏️</button>` : ''}
+            <button class="edit-icon-btn" onclick="openModal('${i.id}', true)" title="Editar Iniciativa">✏️</button>
           </td>
         </tr>`;
       });
@@ -725,7 +648,7 @@ function renderSeguimiento(){
     
     html += `<div class="sec-h" style="margin-top:${html?'24px':'0'}">
       <div class="sec-title">${name}</div>
-      ${editable ? `<button class="btn primary" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>` : ''}
+      <button class="btn primary" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>
     </div>
     <div id="nueva-form-${vp}"></div>
     <div class="tbl-wrap"><table>
@@ -786,9 +709,10 @@ async function guardarNueva(vp){
   render();
 }
 
+// ── CRONOGRAMA ──
 function renderCronograma(){
   const items = filtered();
-  const vps = ['VPDH','VPE','VPF','VLOP','AUD'];
+  const vps = sessionRole === 'admin' ? ['VPDH','VPE','VPF','VLOP','AUD'] : [sessionRole];
   
   const switcher = `<div class="crono-switch">
     <button class="c-btn ${cronoSub==='timeline'?'active':''}" onclick="setCronoSub('timeline')">🗓 Línea de tiempo</button>
@@ -808,10 +732,23 @@ function renderCronograma(){
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--greenBg);border:1.5px solid var(--greenLine);margin-right:4px"></span>Completado</span>
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1.5px solid var(--line);margin-right:4px"></span>Pendiente / En curso</span>
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado / Sin Fecha</span>
+    <span style="margin-left:auto;font-size:11px">Clic para abrir detalles</span>
   </div>`;
   document.getElementById('content').innerHTML = switcher + body + leg;
 }
 
+function tlColor(i){
+  const st = store[i.id].status;
+  if(['Ejecutado'].includes(st)) return 'tl-done';
+  if(!i.fecha || i.fecha < TODAY) return 'tl-late';
+  return 'tl-pend';
+}
+function tlImpact(i){
+  const parts=[];
+  if(i.fte) parts.push('-'+fmtN(i.fte)+' FTE');
+  if(i.cop) parts.push(fmtCOP(i.cop));
+  return parts.join(' · ')||'';
+}
 function buildTL(arr,label,val){
   const buckets = Array.from({length:12},()=>[]);
   const nodate = [];
@@ -868,6 +805,7 @@ function buildLista(arr,label){
 
 function setCronoSub(v){ cronoSub=v; renderCronograma(); }
 
+// ── MODAL LÓGICA (LECTURA VS EDICIÓN) ──
 function openModal(id, isEditMode) {
   const i = DATA.find(x => x.id === id);
   const rec = store[id];
@@ -875,7 +813,7 @@ function openModal(id, isEditMode) {
   
   const segs = rec.segs.length
     ? rec.segs.map(s => `<div class="seg-item"><div class="si-meta"><b>${s.autor}</b><span>${s.fecha}</span></div><div class="si-txt">${esc(s.txt)}</div></div>`).join('')
-    : '<div class="seg-empty">Sin seguimientos registrados.</div>';
+    : '<div class="seg-empty">Sin seguimientos.</div>';
 
   let bodyHtml = '';
 
@@ -909,12 +847,11 @@ function openModal(id, isEditMode) {
         <div class="mf"><div class="ml">Capturado</div><div class="mv" style="color:var(--green)">${rec.fteCapturado||0} FTE · ${fmtCOP(rec.copCapturado)}</div></div>
       </div>
       
-      ${sessionRole !== 'CEO' ? `
       <div class="add-box">
         <label style="font-size:10.5px; font-weight:700; color:var(--sky); display:block; margin-bottom:6px">AGREGAR SEGUIMIENTO</label>
         <textarea id="seg-txt" placeholder="Registra un avance, decisión o novedad..."></textarea>
         <div class="add-actions"><button class="btn primary" onclick="addSeg('${id}')">Guardar nota</button></div>
-      </div>` : ''}
+      </div>
       <div class="seg-list">${segs}</div>
     `;
   }
@@ -952,6 +889,7 @@ async function saveEdits(id) {
   if(dateVal) { const [y,m,d] = dateVal.split('-'); i.fecha = new Date(y, m-1, d); i.fechaTxt = `${d}/${m}/${y}`; } 
   else { i.fecha = null; i.fechaTxt = 'Sin fecha'; }
 
+  // Hemos optimizado para hacer un solo guardado maestro
   await saveRec(id);
   closeModal(); render();
 }
@@ -964,6 +902,7 @@ async function addSeg(id) {
   store[id].segs.unshift({ autor, fecha, txt });
   if(store[id].status === 'Pendiente') store[id].status = 'En curso'; 
   
+  // Hemos optimizado: el saveRec envía toda la fila y el nuevo segmento al tiempo.
   await saveRec(id);
   closeModal(); render();
 }

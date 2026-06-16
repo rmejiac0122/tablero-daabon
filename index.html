@@ -257,12 +257,11 @@ const fmtCOP=v=>{ if(!v||v===0) return '—'; if(v>=1e9) return '$'+(v/1e9).toFi
 const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
 
 const TODAY = new Date();
-const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
 const STATUSES=['Pendiente','En curso','Ejecutado','Archivada'];
 const SC={'Ejecutado':'done','En curso':'prog','Pendiente':'pend','Archivada':'archived'};
 const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
 
-// Base estática de datos (Se filtrará luego de loguear)
+// Base estática de datos
 const DATA_BASE = [
   {id:'dh-1',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'En este caso se hizo un ajuste a la coordinadora líder de nomina (Salario Básico y Gasto de Transporte). Cargo no remplazado. Se hizo una prestación de servicios hasta diciembre monto de $ 4.500.000',fecha:D(2026,1,31),fechaTxt:'31/01/2026',fte:null,cop:175658808,status:'Ejecutado'},
   {id:'dh-2',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'La persona saliente, tenía un BPR asignado de $500.000, éstos fueron otorgados a Mariana García (Profesional Senior Atracción de Talentos)',fecha:D(2026,3,15),fechaTxt:'15/03/2026',fte:null,cop:67601808,status:'Ejecutado'},
@@ -570,7 +569,8 @@ function renderSeguimiento(){
     let rows = '';
     
     Object.keys(depts).forEach(dept => {
-      rows += `<tr class="dept-sep"><td colspan="8">▸ ${dept}</td></tr>`;
+      // Ajuste a 9 columnas para que la fila departamental cubra la tabla entera
+      rows += `<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
       depts[dept].forEach(i => {
         const rec = store[i.id];
         const isArchived = rec.status === 'Archivada';
@@ -586,6 +586,7 @@ function renderSeguimiento(){
           <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
           <td><span class="st-btn ${sc}" style="cursor:default; min-width:70px">${rec.status}</span></td>
           <td><div class="impact-val" style="color:var(--green)">${rec.fteCapturado||0}</div></td>
+          <td><div class="impact-sub" style="font-weight:600; color:var(--green)">${fmtCOP(rec.copCapturado||0)}</div></td>
           <td style="white-space:nowrap">
             <button class="seg-btn" onclick="openModal('${i.id}', false)">Seguimiento ${ns?`(${ns})`:''}</button>
             <button class="edit-icon-btn" onclick="openModal('${i.id}', true)" title="Editar Iniciativa">✏️</button>
@@ -600,7 +601,7 @@ function renderSeguimiento(){
     </div>
     <div id="nueva-form-${vp}"></div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th style="width:34%">Iniciativa</th><th>Tipo</th><th>FTE Comp.</th><th>COP Comp.</th><th>Fecha</th><th>Estado</th><th>FTE Cap.</th><th>Acciones</th></tr></thead>
+      <thead><tr><th style="width:28%">Iniciativa</th><th>Tipo</th><th>FTE Comp.</th><th>COP Comp.</th><th>Fecha</th><th>Estado</th><th>FTE Cap.</th><th>COP Cap.</th><th>Acciones</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
   });
@@ -653,7 +654,6 @@ async function guardarNueva(vp){
 function openModal(id, isEditMode) {
   const i = DATA.find(x => x.id === id);
   const rec = store[id];
-  const aopts = AUTHORS.map(a => `<option>${a}</option>`).join('');
   const opts = STATUSES.map(s => `<option value="${s}" ${s===rec.status?'selected':''}>${s}</option>`).join('');
   
   const segs = rec.segs.length
@@ -696,7 +696,6 @@ function openModal(id, isEditMode) {
       
       <div class="add-box">
         <label style="font-size:10.5px; font-weight:700; color:var(--sky); display:block; margin-bottom:6px">AGREGAR SEGUIMIENTO</label>
-        <select id="seg-autor">${aopts}</select>
         <textarea id="seg-txt" placeholder="Registra un avance, decisión o novedad..."></textarea>
         <div class="add-actions"><button class="btn primary" onclick="addSeg('${id}')">Guardar nota</button></div>
       </div>
@@ -744,12 +743,14 @@ async function saveEdits(id) {
 
 async function addSeg(id) {
   const txt = document.getElementById('seg-txt').value.trim(); if(!txt) return;
-  const autor = document.getElementById('seg-autor').value;
+  
+  // Automáticamente el autor es el usuario conectado
+  const autor = sessionRole === 'admin' ? 'Administrador' : VP_NAMES[sessionRole];
   const fecha = new Date().toLocaleDateString('es-CO');
   
   store[id].segs.unshift({ autor, fecha, txt });
   
-  // Si estaba pendiente, automáticamente pasa a En curso al recibir la primera nota.
+  // Si estaba pendiente, pasa a En curso al recibir la primera nota.
   if(store[id].status === 'Pendiente') { store[id].status = 'En curso'; await saveRec(id); }
   
   await apiCall('addSeg', { id, seg: { autor, fecha, txt } });

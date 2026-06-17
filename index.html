@@ -591,10 +591,11 @@ async function initApp(){
       if(it){
         if(rec.planOverride){store[id].planOverride=rec.planOverride;it.plan=rec.planOverride;}
         if(rec.fechaOverride){
-          store[id].fechaOverride=rec.fechaOverride;
-          const[y,m,d]=rec.fechaOverride.split('-');
-          it.fecha=new Date(y,m-1,d);it.fechaTxt=`${d}/${m}/${y}`;
-        }
+  store[id].fechaOverride=rec.fechaOverride;
+  const dateOnly=rec.fechaOverride.split('T')[0]; // strip time part
+  const[y,m,d]=dateOnly.split('-');
+  it.fecha=new Date(y,m-1,d);it.fechaTxt=`${d}/${m}/${y}`;
+}
       }
     });
     // Cargar customs

@@ -23,21 +23,19 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
 
-/* ── LOGIN SCREENS ── */
-.auth-wrapper { position:fixed; inset:0; background:var(--navy); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; }
-.auth-box { background:var(--white); padding:40px; border-radius:14px; width:100%; max-width:400px; box-shadow:0 20px 40px rgba(0,0,0,0.3); text-align:center; }
-.auth-box h2 { font-family:var(--display); color:var(--navy); font-size:24px; margin-bottom:8px; line-height:1.1; }
-.auth-box p { font-size:13px; color:var(--muted); margin-bottom:24px; }
-.auth-field { text-align:left; margin-bottom:16px; }
-.auth-field label { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); display:block; margin-bottom:6px; }
-.auth-field select, .auth-field input { width:100%; padding:12px; border:1.5px solid var(--line); border-radius:8px; font-family:var(--font); font-size:14px; outline:none; transition:0.2s; }
-.auth-field select:focus, .auth-field input:focus { border-color:var(--sky); }
-.auth-btn { width:100%; padding:14px; background:var(--sky); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; font-family:var(--font); transition:0.2s; margin-top:8px; }
-.auth-btn:hover { background:var(--navy); }
-.auth-error { color:var(--red); font-size:12px; font-weight:600; margin-top:12px; display:none; }
-
-/* ── MAIN APP (Hidden initially) ── */
-#app-wrapper { display:none; }
+/* ── AUTH ── */
+.auth-wrapper{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.auth-box{background:var(--white);padding:40px;border-radius:14px;width:100%;max-width:400px;box-shadow:0 20px 40px rgba(0,0,0,.3);text-align:center}
+.auth-box h2{font-family:var(--display);color:var(--navy);font-size:24px;margin-bottom:8px}
+.auth-box p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.auth-field{text-align:left;margin-bottom:16px}
+.auth-field label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:6px}
+.auth-field select,.auth-field input{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:8px;font-family:var(--font);font-size:14px;outline:none;transition:.2s}
+.auth-field select:focus,.auth-field input:focus{border-color:var(--sky)}
+.auth-btn{width:100%;padding:14px;background:var(--sky);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:.2s;margin-top:8px}
+.auth-btn:hover{background:var(--navy)}
+.auth-error{color:var(--red);font-size:12px;font-weight:600;margin-top:12px;display:none}
+#app-wrapper{display:none}
 
 /* ── TOPBAR ── */
 .topbar{background:var(--navy);color:#fff;padding:0 28px}
@@ -46,10 +44,9 @@ body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:
 .brand-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#6A94BE;margin-bottom:2px}
 .brand-title{font-family:var(--display);font-size:26px;color:#fff;line-height:1.1}
 .brand-sub{font-size:12px;color:#8CAEC8;margin-top:3px}
+.vp-badge-top{font-size:11px;font-weight:700;background:var(--sky);color:#fff;padding:4px 10px;border-radius:6px;margin-left:12px;vertical-align:middle;letter-spacing:.5px}
 .topbar-meta{text-align:right;font-size:11.5px;color:#6A94BE;padding-bottom:4px}
 .topbar-meta b{color:#A8C8E0}
-.vp-badge-top { font-size:11px; font-weight:700; background:var(--sky); color:#fff; padding:4px 10px; border-radius:6px; margin-left:12px; vertical-align:middle; letter-spacing:0.5px;}
-
 .tabs{display:flex;gap:1px;margin-top:18px}
 .tab{padding:11px 22px;font-size:12.5px;font-weight:600;color:#7AAABF;cursor:pointer;border-radius:8px 8px 0 0;background:transparent;border:none;font-family:var(--font);letter-spacing:.2px;transition:.15s}
 .tab:hover{color:#fff;background:rgba(255,255,255,.07)}
@@ -66,32 +63,34 @@ body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:
 /* ── CONTENT ── */
 .content{padding:24px 28px;max-width:1260px;margin:0 auto}
 
-/* ── KPI STRIP ── */
+/* ── KPI ── */
 .kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
-.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;transition:.15s}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden}
 .kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
 .kpi.k0::after{background:linear-gradient(90deg,var(--sky),var(--navy))}
 .kpi.k1::after{background:var(--green)}
 .kpi.k2::after{background:var(--gold)}
-.kpi.k3::after{background:var(--gray)}
 .kpi.k4::after{background:var(--red)}
+.kpi.k3::after{background:var(--gray)}
 .kpi-num{font-family:var(--display);font-size:32px;color:var(--navy);line-height:1;margin-bottom:6px}
-.kpi-num sup{font-size:14px;vertical-align:super}
 .kpi-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
 .kpi-det{font-size:11.5px;color:var(--mid);margin-top:5px}
 
-/* ── VP CARDS GRID ── */
+/* ── VP CARDS ── */
 .vp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
 .vp-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.15s}
 .vp-card:hover{border-color:var(--sky2);box-shadow:0 4px 18px rgba(58,130,196,.12)}
 .vp-card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start}
 .vp-name{font-family:var(--display);font-size:16px;color:var(--navy)}
 .vp-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;background:var(--skyBg);color:var(--sky);text-transform:uppercase;letter-spacing:.4px}
-.vp-valor{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--navy);padding:0 16px 4px}
+.vp-valor{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--navy);padding:0 16px 2px}
 .vp-valor small{font-family:var(--font);font-size:10.5px;color:var(--muted);font-weight:400}
-.vp-bar{height:6px;background:var(--grayBg);margin:10px 16px}
+.vp-cap{padding:2px 16px 6px;font-size:12px;color:var(--green);font-weight:600}
+.vp-bar{height:6px;background:var(--grayBg);margin:8px 16px}
 .vp-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--sky))}
-.vp-footer{display:flex;justify-content:space-between;padding:10px 16px 14px;font-size:11.5px;color:var(--muted)}
+.vp-footer{display:flex;justify-content:space-between;padding:8px 16px 12px;font-size:11.5px;color:var(--muted)}
+.vp-footer b{color:var(--ink)}
 
 /* ── TABLE ── */
 .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -101,31 +100,44 @@ body{font-family:var(--font);color:var(--ink);background:var(--paper);font-size:
 table{width:100%;border-collapse:collapse}
 thead tr{background:var(--navy)}
 th{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#9BBBD0;padding:12px 14px;text-align:left}
-td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+td{padding:11px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
 tr.data-row:last-child td{border-bottom:none}
 tr.data-row:hover td{background:var(--skyBg)}
-tr.late-row td { background: #FFF4F4; }
-tr.archived-row td { opacity: 0.5; background: #fafafa; }
-tr.archived-row .plan-text { text-decoration: line-through; }
+tr.late-row td{background:#FFF4F4}
+tr.archived-row td{opacity:.5;background:#fafafa}
+tr.archived-row .plan-text{text-decoration:line-through}
 .dept-sep td{background:var(--navy2);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:8px 14px;border-bottom:none}
-.plan-text{color:var(--ink);line-height:1.45;max-width:380px}
+.plan-text{color:var(--ink);line-height:1.45;max-width:360px}
 .plan-area{font-size:10.5px;color:var(--muted);margin-top:2px}
 .tipo-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap}
 .tipo-tag.tec{background:var(--skyBg);color:#2A6FA0}
 .tipo-tag.pro{background:var(--greenBg);color:var(--green)}
 .impact-val{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--navy)}
-.impact-sub{font-size:10.5px;color:var(--muted)}
 .fecha-cell{font-size:12px;color:var(--mid);white-space:nowrap}
 .fecha-cell.late{color:var(--red);font-weight:700}
-.st-btn{display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;cursor:pointer;border:1.5px solid var(--line);border-radius:7px;padding:5px 12px;background:var(--white);font-family:var(--font);transition:.15s;white-space:nowrap;min-width:90px}
-.st-btn.done{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── STATUS BUTTON ── */
+.st-btn{display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;border:1.5px solid var(--line);border-radius:7px;padding:5px 12px;background:var(--white);font-family:var(--font);transition:.15s;white-space:nowrap;min-width:90px}
+.st-btn.clickable{cursor:pointer}
+.st-btn.clickable:hover{opacity:.85}
+.st-btn.ejecutado{background:var(--green);border-color:var(--green);color:#fff}
 .st-btn.prog{background:var(--amberBg);border-color:var(--amberLine);color:var(--amber)}
 .st-btn.pend{background:var(--grayBg);border-color:var(--line);color:var(--gray)}
-.st-btn.archived{background:var(--gray);border-color:var(--mid);color:#fff}
+.st-btn.atrasado{background:var(--redBg);border-color:var(--redLine);color:var(--red)}
+.st-btn.archived{background:var(--grayBg);border-color:var(--line);color:var(--muted);opacity:.6}
+
+/* ── BUTTONS ── */
 .seg-btn{font-size:11px;font-weight:600;color:var(--sky);background:var(--skyBg);border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:.15s}
 .seg-btn:hover{background:var(--sky);color:#fff}
-.edit-icon-btn{background:transparent; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; margin-left:4px; font-size:12px; transition:0.15s;}
-.edit-icon-btn:hover{background:var(--amberBg); border-color:var(--amberLine);}
+.edit-icon-btn{background:transparent;border:1px solid var(--line);padding:4px 8px;border-radius:6px;cursor:pointer;margin-left:4px;font-size:12px;transition:.15s}
+.edit-icon-btn:hover{background:var(--amberBg);border-color:var(--amberLine)}
+.btn{padding:8px 18px;border-radius:7px;font-weight:600;font-size:12.5px;cursor:pointer;border:none;font-family:var(--font);transition:.15s}
+.btn.primary{background:var(--navy);color:#fff}
+.btn.primary:hover{background:var(--navy3)}
+.btn.ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--sky);color:var(--sky)}
+.btn-nueva{font-size:12px;font-weight:700;color:#fff;background:var(--green);border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:var(--font);transition:.15s}
+.btn-nueva:hover{background:var(--navy)}
 
 /* ── CRONOGRAMA ── */
 .crono-switch{display:flex;gap:6px;margin-bottom:16px}
@@ -139,9 +151,9 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .tl-track{position:relative;min-width:900px}
 .tl-months{display:grid;grid-template-columns:repeat(12,1fr)}
 .tl-m{text-align:center;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px}
-.tl-line{height:2px;background:var(--line);border-radius:2px;margin-bottom:0;position:relative}
+.tl-line{height:2px;background:var(--line);border-radius:2px;position:relative}
 .tl-line-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--green),var(--sky));border-radius:2px;transition:.6s}
-.tl-cols{display:grid;grid-template-columns:repeat(12,1fr);margin-top:0}
+.tl-cols{display:grid;grid-template-columns:repeat(12,1fr)}
 .tl-col{position:relative;border-right:1px dashed #E8EFF5;padding-top:10px;min-height:60px}
 .tl-col:last-child{border-right:none}
 .tl-item{cursor:pointer;text-align:center;margin:0 2px 8px;transition:.15s}
@@ -159,21 +171,21 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .tl-nd-chip.tl-done{border-color:var(--greenLine);background:var(--greenBg);color:var(--green)}
 .tl-nd-chip.tl-late{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
 .tl-nd-chip.tl-pend{border-color:var(--line);background:var(--grayBg);color:var(--gray)}
-
-/* lista crono */
 .lista-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
-.lista-head{background:var(--navy2);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.lista-head{background:var(--navy2);padding:11px 18px}
 .lista-vp{color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.5px;text-transform:uppercase}
 .lista-tbl{width:100%;border-collapse:collapse}
 .lista-tbl th{background:var(--paper);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--line);text-align:left}
 .lista-tbl td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:middle}
 .lista-tbl tr:last-child td{border-bottom:none}
 .lista-tbl tr:hover td{background:var(--skyBg);cursor:pointer}
+.leg{display:flex;gap:14px;padding:13px 18px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:4px}
+.leg span{display:inline-flex;align-items:center;gap:6px}
 
 /* ── MODAL ── */
 .overlay{position:fixed;inset:0;background:rgba(10,25,50,.6);display:none;align-items:flex-start;justify-content:center;padding:36px 16px;z-index:100;overflow-y:auto;backdrop-filter:blur(3px)}
 .overlay.show{display:flex}
-.modal{background:var(--white);border-radius:14px;max-width:600px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.modal{background:var(--white);border-radius:14px;max-width:600px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.35);max-height:90vh;overflow-y:auto}
 .modal-top{background:var(--navy);padding:20px 24px;border-radius:14px 14px 0 0}
 .modal-tag{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6A94BE;margin-bottom:6px}
 .modal-ttl{font-family:var(--display);font-size:17px;color:#fff;line-height:1.4}
@@ -182,30 +194,45 @@ tr.archived-row .plan-text { text-decoration: line-through; }
 .mf{flex:1;min-width:110px}
 .mf .ml{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
 .mf .mv{font-size:14px;font-weight:700;color:var(--navy)}
-.mf select,.mf input[type=number]{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-family:var(--font);font-size:13px;color:var(--ink);background:var(--white)}
+.mf select,.mf input{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-family:var(--font);font-size:13px;color:var(--ink);background:var(--white)}
 .mf select:focus,.mf input:focus{outline:none;border-color:var(--sky)}
-.mf select:disabled,.mf input:disabled{background:var(--grayBg); cursor:not-allowed; opacity:0.8;}
-.seg-list{display:flex;flex-direction:column;gap:9px;max-height:220px;overflow-y:auto;margin-bottom:14px; border-top:1px solid var(--line); padding-top:16px;}
+.seg-section-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+.seg-list{display:flex;flex-direction:column;gap:9px;max-height:220px;overflow-y:auto;margin-bottom:14px}
 .seg-item{background:var(--paper);border-left:3px solid var(--sky);border-radius:0 8px 8px 0;padding:10px 14px}
 .seg-item .si-meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-bottom:4px}
+.seg-item .si-meta b{color:var(--navy)}
 .seg-item .si-txt{font-size:12.5px;color:var(--ink);line-height:1.45}
+.seg-empty{font-size:12.5px;color:var(--muted);font-style:italic;padding:6px 0}
 .add-box{background:var(--skyBg);border-radius:10px;padding:14px}
-.add-box select,.add-box textarea{width:100%;border:1.5px solid #C8DEF0;border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;margin-bottom:8px;resize:vertical;}
+.add-box.require-note{border:2px solid var(--amber);background:var(--amberBg)}
+.add-box select,.add-box textarea{width:100%;border:1.5px solid #C8DEF0;border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;margin-bottom:8px;resize:vertical;background:var(--white)}
+.add-box.require-note select,.add-box.require-note textarea{border-color:var(--amberLine)}
 .add-box textarea{min-height:56px}
-.btn{padding:8px 18px;border-radius:7px;font-weight:600;font-size:12.5px;cursor:pointer;border:none;font-family:var(--font);transition:.15s}
-.btn.primary{background:var(--navy);color:#fff}
-.btn.ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+.add-actions{display:flex;justify-content:flex-end;gap:8px}
 .edit-box{background:#FFF8EE;border:1.5px solid var(--amberLine);border-radius:10px;padding:14px;margin-bottom:16px}
-.edit-box textarea, .edit-box input{width:100%;border:1.5px solid var(--amberLine);border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;background:#fff;margin-bottom:8px}
-.edit-box textarea{min-height:56px}
+.edit-box label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--amber);display:block;margin-bottom:4px}
+.edit-box textarea,.edit-box input,.edit-box select{width:100%;border:1.5px solid var(--amberLine);border-radius:7px;padding:8px 10px;font-family:var(--font);font-size:13px;background:var(--white);margin-bottom:10px}
+.edit-box textarea{min-height:60px;resize:vertical}
+.saved-note{font-size:11px;color:var(--green);font-weight:700;opacity:0;transition:.3s;margin-left:8px}
+.saved-note.show{opacity:1}
+.modal-close{float:right;cursor:pointer;color:#6A94BE;font-size:22px;line-height:1;border:none;background:none;padding:0}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--green);color:#fff}
+.toast.error{background:var(--red);color:#fff}
+.toast.warn{background:var(--amber);color:#fff}
+@media(max-width:900px){.kpi-strip{grid-template-columns:repeat(3,1fr)}.vp-grid,.dept-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.kpi-strip{grid-template-columns:1fr 1fr}.vp-grid,.dept-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div class="auth-wrapper" id="login-screen">
   <div class="auth-box">
     <h2>Tablero de Optimización</h2>
-    <p>Inicia sesión con tu vicepresidencia</p>
+    <p>Grupo Daabon · 2026</p>
     <div class="auth-field">
       <label>Vicepresidencia / Rol</label>
       <select id="login-role">
@@ -213,36 +240,38 @@ tr.archived-row .plan-text { text-decoration: line-through; }
         <option value="VPDH">VP Desarrollo Humano</option>
         <option value="VPE">VP Ejecutiva</option>
         <option value="VPF">VP Financiera</option>
-        <option value="VLOP">VP Log. & Operaciones</option>
+        <option value="VLOP">VP Log. &amp; Operaciones</option>
         <option value="AUD">Auditoría</option>
       </select>
     </div>
     <div class="auth-field">
       <label>Contraseña</label>
-      <input type="password" id="login-pass" placeholder="Ingresa tu clave">
+      <input type="password" id="login-pass" placeholder="Ingresa tu clave" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="auth-btn" onclick="doLogin()" id="btn-ingresar">Ingresar al tablero</button>
+    <button class="auth-btn" onclick="doLogin()" id="btn-ingresar">Ingresar</button>
     <div class="auth-error" id="login-error"></div>
   </div>
 </div>
 
-<div class="auth-wrapper" id="change-pwd-screen" style="display:none;">
+<!-- CAMBIO CONTRASEÑA -->
+<div class="auth-wrapper" id="change-pwd-screen" style="display:none">
   <div class="auth-box">
-    <h2>Seguridad Obligatoria</h2>
-    <p>Por ser tu primer inicio de sesión, debes establecer una contraseña privada.</p>
+    <h2>Configura tu contraseña</h2>
+    <p>Primer acceso — establece una contraseña privada para tu cuenta.</p>
     <div class="auth-field">
       <label>Nueva contraseña</label>
-      <input type="password" id="new-pass-1" placeholder="Crea una contraseña segura">
+      <input type="password" id="new-pass-1" placeholder="Mínimo 6 caracteres">
     </div>
     <div class="auth-field">
       <label>Confirmar contraseña</label>
-      <input type="password" id="new-pass-2" placeholder="Repite la contraseña">
+      <input type="password" id="new-pass-2" placeholder="Repite la contraseña" onkeydown="if(event.key==='Enter')doChangePwd()">
     </div>
-    <button class="auth-btn" onclick="doChangePwd()" id="btn-cambiar">Guardar y Continuar</button>
+    <button class="auth-btn" onclick="doChangePwd()" id="btn-cambiar">Guardar y continuar</button>
     <div class="auth-error" id="pwd-error"></div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app-wrapper">
   <div class="topbar">
     <div class="topbar-inner">
@@ -252,8 +281,8 @@ tr.archived-row .plan-text { text-decoration: line-through; }
         <div class="brand-sub">Seguimiento a ejecución e impacto por vicepresidencia</div>
       </div>
       <div style="text-align:right">
-        <button style="background:transparent; color:#8CAEC8; border:1px solid #6A94BE; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer; margin-bottom:10px" onclick="logout()">Cerrar sesión</button>
-        <div class="topbar-meta">Valor total comprometido<br><b id="topbar-total"></b></div>
+        <button onclick="logout()" style="background:transparent;color:#8CAEC8;border:1px solid #6A94BE;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-bottom:10px">Cerrar sesión</button>
+        <div class="topbar-meta">Valor comprometido<br><b id="topbar-total">—</b></div>
       </div>
     </div>
     <div class="tabs">
@@ -263,7 +292,7 @@ tr.archived-row .plan-text { text-decoration: line-through; }
     </div>
   </div>
 
-  <div class="toolbar" id="main-toolbar">
+  <div class="toolbar">
     <div class="fgroup" id="vp-filters">
       <label>VP</label>
       <button class="chip on" data-f="vp" data-v="all">Todas</button>
@@ -276,36 +305,55 @@ tr.archived-row .plan-text { text-decoration: line-through; }
     <div class="fgroup">
       <label>Tipo</label>
       <button class="chip on" data-f="tipo" data-v="all">Todas</button>
-      <button class="chip" data-f="tipo" data-v="Proceso">Decisión/Proceso</button>
+      <button class="chip" data-f="tipo" data-v="Proceso">Proceso</button>
       <button class="chip" data-f="tipo" data-v="Tecnologia">Tecnología</button>
+    </div>
+    <div class="fgroup">
+      <label>Estado</label>
+      <button class="chip on" data-f="arch" data-v="active">Activas</button>
+      <button class="chip" data-f="arch" data-v="all">Todas inc. archivadas</button>
     </div>
   </div>
 
   <div class="content" id="content"></div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal"></div>
-</div>
+<div id="toast" class="toast"></div>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 
 <script>
-// ── CONFIGURACIÓN API ──
-let API_URL = 'https://script.google.com/macros/s/AKfycbzuUrrXbf5CgmoywrOY4S0Wy9exM-xB5h5deih7n_9F2FhBKLuLSo_NQlNZgVGZgQdY/exec';
-
-// ── VARIABLES GLOBALES ──
+// ─── CONSTANTES ───────────────────────────────────────────
 const D=(y,m,d)=>new Date(y,m-1,d);
-const fmtCOP=v=>{ if(!v||v===0) return '—'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'MM'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; return '$'+v.toLocaleString('es-CO'); };
+const fmtCOP=v=>{if(!v||v===0)return'—';if(v>=1e9)return'$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'MM';if(v>=1e6)return'$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M';return'$'+v.toLocaleString('es-CO');};
 const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const TODAY = new Date();
-const STATUSES=['Pendiente','En curso','Ejecutado','Archivada'];
-const SC={'Ejecutado':'done','En curso':'prog','Pendiente':'pend','Archivada':'archived'};
-const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
+const TODAY=new Date();
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
 
-// Base estática de datos
-// ⚠️ IMPORTANTE: NUNCA CAMBIES LOS "id" (dh-1, e-1, etc.) DE ESTAS FILAS, SINO SE PERDERÁ SU HISTORIAL EN LA BASE DE DATOS
-const DATA_BASE = [
+// BUG #8: Mapeo de rol a nombre de autor
+const AUTHOR_MAP={
+  admin:'Roberto Mejía — Consultor',
+  VPDH:'VP Desarrollo Humano',
+  VPE:'VP Ejecutiva',
+  VPF:'VP Financiera',
+  VLOP:'VP Log. & Operaciones',
+  AUD:'Auditoría'
+};
+function getAutor(){return AUTHOR_MAP[sessionRole]||sessionRole||'Usuario';}
+
+// FIX #3: SC usa 'ejecutado' que coincide con .st-btn.ejecutado en CSS
+const SC={'Ejecutado':'ejecutado','En curso':'prog','Pendiente':'pend','Atrasado':'atrasado','Archivada':'archived'};
+const VP_NAMES={VPDH:'VP Desarrollo Humano',VPE:'VP Ejecutiva',VPF:'VP Financiera',VLOP:'VP Log. & Operaciones',AUD:'Auditoría'};
+const STATUSES_CYCLE=['Pendiente','En curso','Ejecutado']; // Ciclo manual sin Atrasado
+const STATUSES_SELECT=['Pendiente','En curso','Ejecutado','Archivada']; // Para el select del modal
+
+// ─── API URL ──────────────────────────────────────────────
+const API_URL='https://script.google.com/macros/s/AKfycbzuUrrXbf5CgmoywrOY4S0Wy9exM-xB5h5deih7n_9F2FhBKLuLSo_NQlNZgVGZgQdY/exec';
+
+// ─── DATA BASE (inmutable) ────────────────────────────────
+const DATA_BASE=[
   {id:'dh-1',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'En este caso se hizo un ajuste a la coordinadora líder de nomina (Salario Básico y Gasto de Transporte). Cargo no remplazado. Se hizo una prestación de servicios hasta diciembre monto de $ 4.500.000',fecha:D(2026,1,31),fechaTxt:'31/01/2026',fte:null,cop:175658808,status:'Ejecutado'},
   {id:'dh-2',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'La persona saliente, tenía un BPR asignado de $500.000, éstos fueron otorgados a Mariana García (Profesional Senior Atracción de Talentos)',fecha:D(2026,3,15),fechaTxt:'15/03/2026',fte:null,cop:67601808,status:'Ejecutado'},
   {id:'dh-3',vp:'VPDH',dept:'DH Corporativo',area:'DH',tipo:'Proceso',plan:'A partir de marzo/2026 se vinculó a María Daza Melgarejo como Asistente de Desarrollo Humano, apoyando el proceso de Selección, con una asignación básica mensual de 1 SMMLV, asignación salarial menor a la persona saliente.',fecha:D(2026,5,11),fechaTxt:'11/05/2026',fte:null,cop:13754856,status:'Ejecutado'},
@@ -329,29 +377,29 @@ const DATA_BASE = [
   {id:'dh-20',vp:'VPDH',dept:'SST ARL',area:'DH',tipo:'Proceso',plan:'Reclasificacion de riesgo laboral en empleados (Ahorro en costo de nomina)',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:0,cop:1200000000,status:'Pendiente'},
   {id:'e-1',vp:'VPE',dept:'Seguridad Física',area:'ZFA',tipo:'Tecnologia',plan:'Implementación del perímetro digital',fecha:null,fechaTxt:'Sin fecha',fte:12,cop:600000000,status:'Pendiente'},
   {id:'e-2',vp:'VPE',dept:'Seguridad Física',area:'La Samaria',tipo:'Proceso',plan:'Colocar personal reubicado en turnos en portería, y dejando sólo guardas en el turno de la noche.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:4,cop:200000000,status:'Pendiente'},
-  {id:'e-3',vp:'VPE',dept:'Seguridad Física',area:'Terlica, Newland, Dávila, Cisne',tipo:'Tecnologia',plan:'Implementacion del perimetro digital y reunicacion de personal en porteria. (Con base a los dos pilotos anteriores se evaluará la intervención inmediata de estas areas)',fecha:D(2026,11,1),fechaTxt:'01/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-4',vp:'VPE',dept:'Seguridad Física',area:'Grupo',tipo:'Proceso',plan:'Evaluar la incorporación de SENAs como personal de portería (registro de ingreso, toma de fotografías, etc). De manera general en el grupo de la cuota de 178 cupos se tienen contratados 107, por lo que estamos monetizando 71 cupos que no se están utilizando.',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-5',vp:'VPE',dept:'Jurídico',area:'Compliance',tipo:'Tecnologia',plan:'Se trabaja en la automatización del proceso de compliance, lo que liberaría prácticamente la carga actual de Director de Gestion y Etica Empresarial. Una vez realizada la mejora del sistema, se debe definir como capturar esta eficiencia, se descarta que asuma la dirección de auditoria.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:268400000,status:'Pendiente'},
-  {id:'e-6',vp:'VPE',dept:'Jurídico',area:'Contratos/IT',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Revisión asistida por IA local de contratos vs. cláusulas estándar del Grupo (semáforo de cumplimiento).',fecha:D(2026,6,22),fechaTxt:'22/06/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-3',vp:'VPE',dept:'Seguridad Física',area:'Terlica, Newland, Dávila, Cisne',tipo:'Tecnologia',plan:'Implementacion del perimetro digital y reubicacion de personal en porteria.',fecha:D(2026,11,1),fechaTxt:'01/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-4',vp:'VPE',dept:'Seguridad Física',area:'Grupo',tipo:'Proceso',plan:'Evaluar la incorporación de SENAs como personal de portería. De 178 cupos contratados 107, monetizando 71 cupos sin utilizar.',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-5',vp:'VPE',dept:'Jurídico',area:'Compliance',tipo:'Tecnologia',plan:'Automatización del proceso de compliance, liberando carga del Director de Gestión y Ética Empresarial.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:268400000,status:'Pendiente'},
+  {id:'e-6',vp:'VPE',dept:'Jurídico',area:'Contratos/IT',tipo:'Tecnologia',plan:'Revisión asistida por IA local de contratos vs. cláusulas estándar del Grupo (semáforo de cumplimiento).',fecha:D(2026,6,22),fechaTxt:'22/06/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-7',vp:'VPE',dept:'Sostenibilidad',area:'Sostenibilidad',tipo:'Proceso',plan:'No se le renueva el contrato a Asistente de Gestión Ambiental, se ajusta a un modelo estandarizado de un coordinador con aprendices.',fecha:D(2026,5,31),fechaTxt:'31/05/2026',fte:1,cop:43200000,status:'Ejecutado'},
   {id:'e-8',vp:'VPE',dept:'Sostenibilidad',area:'Sostenibilidad',tipo:'Proceso',plan:'Se renovó por 6 meses el contrato de Asistente Administrativa, quedando pendiente la distribución de sus actividades.',fecha:D(2026,8,1),fechaTxt:'01/08/2026',fte:1,cop:38400000,status:'Pendiente'},
   {id:'e-9',vp:'VPE',dept:'Sostenibilidad',area:'Certificaciones',tipo:'Proceso',plan:'Con la jubilación del Director de Certificaciones el puesto se elimina y el rol queda integrado a la Direccion de Sostenibilidad como una jefatura',fecha:D(2026,12,1),fechaTxt:'01/12/2026',fte:1,cop:253175634,status:'Pendiente'},
-  {id:'e-10',vp:'VPE',dept:'Sostenibilidad',area:'Sostenibilidad',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Estandarizar el registro de actividades ambientales con un sistema de captura continua que genere automáticamente informes operativos y regulatorios (ICA).',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-10',vp:'VPE',dept:'Sostenibilidad',area:'Sostenibilidad',tipo:'Tecnologia',plan:'Estandarizar el registro de actividades ambientales con sistema de captura continua para informes operativos y regulatorios (ICA).',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-11',vp:'VPE',dept:'SIG',area:'SIG',tipo:'Proceso',plan:'Pasar de un modelo asistencial a un modelo de control.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:3,cop:129600000,status:'Pendiente'},
-  {id:'e-12',vp:'VPE',dept:'SIG',area:'SIG/IT',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Seguimientos con escalamiento automático a Gerencias/VPs por incumplimiento, eliminando la gestión manual.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-12',vp:'VPE',dept:'SIG',area:'SIG/IT',tipo:'Tecnologia',plan:'Seguimientos con escalamiento automático a Gerencias/VPs por incumplimiento, eliminando la gestión manual.',fecha:D(2026,10,1),fechaTxt:'01/10/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-13',vp:'VPE',dept:'La Samaria',area:'Administración y Almacenes',tipo:'Proceso',plan:'Desarrollar cargo fusionado de Coordinador Admin y Almacenes. Absorbiendo 2 coordinaciones en 1.',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:1,cop:66000000,status:'Pendiente'},
-  {id:'e-14',vp:'VPE',dept:'La Samaria',area:'Administración',tipo:'Tecnologia',plan:'Oportunidades de mejoras en tecnología: Automatizar tareas manuales de alto volumen: conciliaciones con proveedores, informes de cierre y revisión de nómina operativa.',fecha:D(2026,8,1),fechaTxt:'01/08/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-15',vp:'VPE',dept:'Desarrollos IT',area:'Equipo Proyecto Optimización',tipo:'Proceso',plan:'Se acuerda participar en una reunión donde podamos exponer los hallazgos, así como tener al tanto al equipo del proyecto de optimizacion (Jaime y Roberto) de lo que se ejecuta y con quien se ejecuta.',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-14',vp:'VPE',dept:'La Samaria',area:'Administración',tipo:'Tecnologia',plan:'Automatizar tareas manuales de alto volumen: conciliaciones con proveedores, informes de cierre y revisión de nómina operativa.',fecha:D(2026,8,1),fechaTxt:'01/08/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-15',vp:'VPE',dept:'Desarrollos IT',area:'Proyecto Optimización',tipo:'Proceso',plan:'Reunión mensual para exponer hallazgos y tener al tanto al equipo del proyecto (Jaime y Roberto).',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-16',vp:'VPE',dept:'Desarrollos IT',area:'Cluster',tipo:'Tecnologia',plan:'Desarrollo de Herramienta Planificación Cluster',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-17',vp:'VPE',dept:'Desarrollos IT',area:'Grupo',tipo:'Tecnologia',plan:'Desarrollo para pagos referenciados en Cluster, Elogia, etc. (Ecollect, PSE….)',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-18',vp:'VPE',dept:'Desarrollos IT',area:'Elogia',tipo:'Tecnologia',plan:'Asignación de combustibles por medio de Agentes IA',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:0,cop:0,status:'Pendiente'},
-  {id:'e-19',vp:'VPE',dept:'Desarrollos IT',area:'DH',tipo:'Tecnologia',plan:'Automatización de cargue de incapacidades a portales de EPS',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:0,cop:0,status:'Pendiente'},
-  {id:'e-20',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'Proyecto Host to Host con bancos para reducir tiempos en programación de pagos. En funcionamiento con BBVA, en proceso con BBOG',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-21',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'Desarrollar RPA o agente que contabilice automáticamente los pagos realizados. Motor automático que toma las facturas ya liberadas, aplica las reglas de asignación banco–factura y ejecuta la contabilización en SAP.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:0,cop:0,status:'Pendiente'},
-  {id:'e-22',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'Desarrollar portal para proveedores con visualización de estado de facturas y pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-23',vp:'VPE',dept:'Desarrollos IT',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Diseñar proceso de automatización de emisión de facturas ya validadas por las áreas pertinentes (proceso macro + tecnología).',fecha:D(2026,7,31),fechaTxt:'31/07/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'e-24',vp:'VPE',dept:'Desarrollos IT',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatizar la gestión de cobranza y la conciliación de pago de proveedores y clientes.',fecha:D(2026,8,31),fechaTxt:'31/08/2026',fte:0,cop:0,status:'Pendiente'},
-  {id:'e-25',vp:'VPE',dept:'Desarrollos IT',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar la contabilización de facturas repetitivas y de gran volumen.',fecha:D(2026,8,30),fechaTxt:'30/08/2026',fte:0,cop:0,status:'Pendiente'},
+  {id:'e-17',vp:'VPE',dept:'Desarrollos IT',area:'Grupo',tipo:'Tecnologia',plan:'Desarrollo para pagos referenciados en Cluster, Elogia, etc. (Ecollect, PSE)',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-18',vp:'VPE',dept:'Desarrollos IT',area:'Elogia',tipo:'Tecnologia',plan:'Asignación de combustibles por medio de Agentes IA',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-19',vp:'VPE',dept:'Desarrollos IT',area:'DH',tipo:'Tecnologia',plan:'Automatización de cargue de incapacidades a portales de EPS',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-20',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'Host to Host con bancos para reducir tiempos en programación de pagos. BBVA funcionando, BBOG en proceso.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-21',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'RPA/Agente que contabilice automáticamente los pagos realizados en SAP.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-22',vp:'VPE',dept:'Desarrollos IT',area:'Tesorería',tipo:'Tecnologia',plan:'Portal para proveedores con visualización de estado de facturas y pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-23',vp:'VPE',dept:'Desarrollos IT',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de emisión de facturas ya validadas por las áreas pertinentes.',fecha:D(2026,7,31),fechaTxt:'31/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-24',vp:'VPE',dept:'Desarrollos IT',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatizar la gestión de cobranza y la conciliación de pago de proveedores y clientes.',fecha:D(2026,8,31),fechaTxt:'31/08/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'e-25',vp:'VPE',dept:'Desarrollos IT',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar la contabilización de facturas repetitivas y de gran volumen.',fecha:D(2026,8,30),fechaTxt:'30/08/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-26',vp:'VPE',dept:'Desarrollos IT',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar cargue de Multicash a SAP.',fecha:D(2026,6,30),fechaTxt:'30/06/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-27',vp:'VPE',dept:'Desarrollos IT',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar la liberación de facturas ya contabilizadas en SAP.',fecha:D(2026,9,30),fechaTxt:'30/09/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-28',vp:'VPE',dept:'Desarrollos IT',area:'Compras',tipo:'Tecnologia',plan:'Automatizar compras repetitivas que cumplan con parámetros establecidos por el Grupo.',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:0,status:'Pendiente'},
@@ -359,32 +407,32 @@ const DATA_BASE = [
   {id:'e-30',vp:'VPE',dept:'Desarrollos IT',area:'Impuestos',tipo:'Tecnologia',plan:'Desarrollo tecnológico que apoye la gestión de devolución de saldos a favor.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-31',vp:'VPE',dept:'Desarrollos IT',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Mejora de reportes en QlikSense para presentación en comités de cultivos y extractoras',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'e-32',vp:'VPE',dept:'Desarrollos IT',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar adiciones presupuestales aprobadas por las gerencias.',fecha:D(2026,6,12),fechaTxt:'12/06/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-1',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Proyecto Host to Host con bancos para reducir tiempos en programación de pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-2',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Desarrollar RPA o agente que contabilice automáticamente los pagos realizados en SAP.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:2,cop:105958832,status:'Pendiente'},
-  {id:'f-3',vp:'VPF',dept:'Tesorería',area:'Tesoreria',tipo:'Proceso',plan:'Determinar si la trazabilidad de los pagos seguirá archivándose físicamente.',fecha:D(2026,7,30),fechaTxt:'30/07/2026',fte:1,cop:55975626,status:'Pendiente'},
-  {id:'f-4',vp:'VPF',dept:'Tesorería',area:'Tesoreria',tipo:'Proceso',plan:'Pasar de pagos PSE a portales de bancos para mejorar el tiempo de ejecucion de la Dirección',fecha:D(2026,9,30),fechaTxt:'30/09/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-5',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Estandarizar la recepción de requerimientos de pago recibidos por la dirección',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-6',vp:'VPF',dept:'Tesorería',area:'Tesoreria/IT',tipo:'Tecnologia',plan:'Desarrollar portal para proveedores con visualización de estado de facturas y pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-1',vp:'VPF',dept:'Tesorería',area:'Tesorería/IT',tipo:'Tecnologia',plan:'Proyecto Host to Host con bancos para reducir tiempos en programación de pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-2',vp:'VPF',dept:'Tesorería',area:'Tesorería/IT',tipo:'Tecnologia',plan:'Desarrollar RPA o agente que contabilice automáticamente los pagos realizados en SAP.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:2,cop:105958832,status:'Pendiente'},
+  {id:'f-3',vp:'VPF',dept:'Tesorería',area:'Tesorería',tipo:'Proceso',plan:'Determinar si la trazabilidad de los pagos seguirá archivándose físicamente.',fecha:D(2026,7,30),fechaTxt:'30/07/2026',fte:1,cop:55975626,status:'Pendiente'},
+  {id:'f-4',vp:'VPF',dept:'Tesorería',area:'Tesorería',tipo:'Proceso',plan:'Pasar de pagos PSE a portales de bancos para mejorar el tiempo de ejecución de la Dirección',fecha:D(2026,9,30),fechaTxt:'30/09/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-5',vp:'VPF',dept:'Tesorería',area:'Tesorería/IT',tipo:'Tecnologia',plan:'Estandarizar la recepción de requerimientos de pago recibidos por la dirección',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-6',vp:'VPF',dept:'Tesorería',area:'Tesorería/IT',tipo:'Tecnologia',plan:'Desarrollar portal para proveedores con visualización de estado de facturas y pagos.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-7',vp:'VPF',dept:'Facturación y Cartera',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de la Facturación de Extractoras',fecha:D(2026,7,31),fechaTxt:'31/07/2026',fte:1,cop:0,status:'Pendiente'},
   {id:'f-8',vp:'VPF',dept:'Facturación y Cartera',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización del Envío de Estados de Cuenta desde SAP',fecha:D(2026,6,30),fechaTxt:'30/06/2026',fte:null,cop:70762579,status:'Pendiente'},
-  {id:'f-9',vp:'VPF',dept:'Facturación y Cartera',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de pedidos de ventas Sap Cluster',fecha:D(2026,8,31),fechaTxt:'31/08/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-10',vp:'VPF',dept:'Cuentas por Pagar',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Determinar el alcance de facturas y Automatizar. Contabilización de facturas repetitivas, de aplicación impositiva repetitiva y de gran volumen.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:2,cop:105241248,status:'Pendiente'},
-  {id:'f-11',vp:'VPF',dept:'Cuentas por Pagar',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Determinar el alcance de facturas y Automatizar liberación de facturas evaluadas dentro de la matriz de riesgos con riesgo Bajo/Medio que están contabilizadas en SAP',fecha:D(2026,9,30),fechaTxt:'30/09/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-9',vp:'VPF',dept:'Facturación y Cartera',area:'Facturación y Cartera',tipo:'Tecnologia',plan:'Automatización de pedidos de ventas SAP Cluster',fecha:D(2026,8,31),fechaTxt:'31/08/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-10',vp:'VPF',dept:'Cuentas por Pagar',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar contabilización de facturas repetitivas, de aplicación impositiva repetitiva y de gran volumen.',fecha:D(2026,10,30),fechaTxt:'30/10/2026',fte:2,cop:105241248,status:'Pendiente'},
+  {id:'f-11',vp:'VPF',dept:'Cuentas por Pagar',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar liberación de facturas con riesgo Bajo/Medio ya contabilizadas en SAP',fecha:D(2026,9,30),fechaTxt:'30/09/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-12',vp:'VPF',dept:'Cuentas por Pagar',area:'Cuentas por Pagar',tipo:'Tecnologia',plan:'Automatizar cargue de Multicash a SAP',fecha:D(2026,6,30),fechaTxt:'30/06/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-13',vp:'VPF',dept:'Compras',area:'Compras',tipo:'Tecnologia',plan:'Automatizar compras repetitivas que cumplan con parámetros establecidos por el Grupo. Transporte de Terceros Elogia.',fecha:D(2026,6,15),fechaTxt:'15/06/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-14',vp:'VPF',dept:'Compras',area:'Compras',tipo:'Proceso',plan:'No reponer el coordinador de compras que salio en 2025',fecha:D(2026,1,1),fechaTxt:'01/01/2026',fte:1,cop:101380144,status:'Ejecutado'},
-  {id:'f-15',vp:'VPF',dept:'Compras',area:'Compras',tipo:'Proceso',plan:'Garantizar que el 80% de las solicitudes de compra para materiales y activos fijos pasen por Licita. Se esta trabajando con la consientizacion de los proveeores para que accedan a la plataforma.',fecha:D(2026,7,30),fechaTxt:'30/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-15',vp:'VPF',dept:'Compras',area:'Compras',tipo:'Proceso',plan:'Garantizar que el 80% de las solicitudes de compra para materiales y activos fijos pasen por Licita.',fecha:D(2026,7,30),fechaTxt:'30/07/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-16',vp:'VPF',dept:'Impuestos',area:'Impuestos',tipo:'Tecnologia',plan:'Desarrollar modelo tecnológico para pre-liquidar impuestos mensuales sin depuración.',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-17',vp:'VPF',dept:'Impuestos',area:'Impuestos',tipo:'Tecnologia',plan:'Desarrollar segunda versión de desarrollo tecnológico KEEVANA que apoye diferentes actividades dentro del programa de gestión de devolución de saldos a favor y bases de información para requerimientos de entidades estatales',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-18',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Mejora de reportes en QlikSense para presentación de juntas ( Costos de producción extractoras y cultivos)',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-17',vp:'VPF',dept:'Impuestos',area:'Impuestos',tipo:'Tecnologia',plan:'KEEVANA v2: gestión de devolución de saldos a favor y bases de información para requerimientos estatales',fecha:D(2026,11,30),fechaTxt:'30/11/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-18',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Mejora de reportes en QlikSense para presentación de juntas (costos extractoras y cultivos)',fecha:D(2026,7,1),fechaTxt:'01/07/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-19',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar traslados presupuestales aprobadas por las gerencias Elogia',fecha:D(2026,4,30),fechaTxt:'30/04/2026',fte:null,cop:0,status:'Ejecutado'},
   {id:'f-20',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Automatizar traslados presupuestales aprobadas por las gerencias Cultivos',fecha:D(2026,6,12),fechaTxt:'12/06/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'f-21',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Optimiazación de cargue de nómina para el ejercicio de presupuesto anual',fecha:D(2026,3,31),fechaTxt:'31/03/2026',fte:null,cop:0,status:'Pendiente'},
+  {id:'f-21',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Optimización de cargue de nómina para el ejercicio de presupuesto anual',fecha:D(2026,3,31),fechaTxt:'31/03/2026',fte:null,cop:0,status:'Pendiente'},
   {id:'f-22',vp:'VPF',dept:'Costos y Presupuestos',area:'Costos y Presupuestos',tipo:'Tecnologia',plan:'Validación de cierre técnico de ordenes de producción',fecha:D(2026,6,19),fechaTxt:'19/06/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'v-1',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidacion de las estructuras de las empresas de Sombrilla, dejando 3 de 4 Gerentes ZFA, ZFT, Superportuaria, Superlogistics, Terlica y Trading.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:286753244,status:'Pendiente'},
-  {id:'v-2',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidacion de las estructuras de las empresas de Sombrilla dejando una sola direccion Administrativa y Financiera que tenga a su cargo compras, facturacion y cartera, Sig y SST',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:265824527,status:'Pendiente'},
-  {id:'v-3',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidacion de las estructuras de las empresas de Sombrilla liberando la subdireccion contable de ZFT',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:79157251,status:'Pendiente'},
-  {id:'v-4',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidar actividades en la nueva Direccion Admisnistrariva y Financiera, mismas que actualmente estan repartidas en las empreas, actividades como novedades de nomina, cajas menores, apoyo al sistemas de gestion, recepcion de mercancia, cumplimientos regulatorios.',fecha:null,fechaTxt:'Sin fecha',fte:5,cop:258170395,status:'Pendiente'},
+  {id:'v-1',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidacion de las estructuras de Sombrilla, dejando 3 de 4 Gerentes (ZFA, ZFT, Superportuaria, Superlogistics, Terlica, Trading).',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:286753244,status:'Pendiente'},
+  {id:'v-2',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidacion dejando una sola Dirección Administrativa y Financiera con compras, facturación, cartera, SIG y SST a su cargo.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:265824527,status:'Pendiente'},
+  {id:'v-3',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Liberando la Subdirección Contable de ZFT.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:79157251,status:'Pendiente'},
+  {id:'v-4',vp:'VLOP',dept:'Sombrilla',area:'Sombrilla',tipo:'Proceso',plan:'Consolidar actividades en nueva Dirección Admin-Financiera: nómina, cajas menores, apoyo SIG, recepción mercancía, cumplimientos regulatorios.',fecha:null,fechaTxt:'Sin fecha',fte:5,cop:258170395,status:'Pendiente'},
   {id:'v-5',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'01 · SAP Pagos Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:58800000,status:'Pendiente'},
   {id:'v-6',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'02 · Control de Combustible',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:240000000,status:'Pendiente'},
   {id:'v-7',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'03 · Peajes Electrónicos Etapa 1',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:2800000,status:'Pendiente'},
@@ -395,386 +443,491 @@ const DATA_BASE = [
   {id:'v-12',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'09 · Validación Proveedores',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:35300000,status:'Pendiente'},
   {id:'v-13',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'11 · Torre de Control GPS',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:141100000,status:'Pendiente'},
   {id:'v-14',vp:'VLOP',dept:'Elogia',area:'Elogia',tipo:'Tecnologia',plan:'06 · Check List APP TMS (Beneficio por incremento en ingreso con el mismo costo de nomina)',fecha:null,fechaTxt:'Sin fecha',fte:null,cop:870000000,status:'Pendiente'},
-  {id:'a-1',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Reducción de tiempos de traslados con la incorporación de Jorge Judex que estará por periodos mas largos en San Alberto',fecha:D(2026,1,1),fechaTxt:'01/01/2026',fte:null,cop:0,status:'Ejecutado'},
-  {id:'a-2',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Oportunidad de descargar a Auditoria de funciones operativas (Aprobaciones de cajas menores y casinos, Revision de facturas de fruta, legalización de anticipos, creación de materiales….)',fecha:D(2026,2,1),fechaTxt:'01/02/2026',fte:null,cop:0,status:'Ejecutado'},
+  {id:'a-1',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Reducción de tiempos de traslados con la incorporación de Jorge Judex por períodos más largos en San Alberto',fecha:D(2026,1,1),fechaTxt:'01/01/2026',fte:null,cop:0,status:'Ejecutado'},
+  {id:'a-2',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Descarga de Auditoría de funciones operativas: aprobaciones cajas menores, revisión facturas fruta, legalización anticipos, creación materiales.',fecha:D(2026,2,1),fechaTxt:'01/02/2026',fte:null,cop:0,status:'Ejecutado'},
   {id:'a-3',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Oportunidad de optimizar labores con software: gestor de auditorias + analisis de datos y AI',fecha:D(2026,12,1),fechaTxt:'01/12/2026',fte:null,cop:0,status:'Pendiente'},
-  {id:'a-4',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Al momento del estudio se tenian 3 contrataciones (1 SR y 2 JR) en proceso, se detuvo la contratacion del SR y se elimino la vacante.',fecha:D(2026,1,1),fechaTxt:'01/01/2026',fte:1,cop:55514800,status:'Ejecutado'},
-  {id:'a-5',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Al momento del estudio se tenian 3 contrataciones (1 SR y 2 JR) en proceso, se detuvo la contratacion de 1 JUNIOR autorizandose solo la contratacion de 1 y se elimino la vacante pendiente.Quedando el equipo en 8 + 1 director',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:39203305,status:'Ejecutado'}
+  {id:'a-4',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'Contratación de Auditor Senior detenida y vacante eliminada.',fecha:D(2026,1,1),fechaTxt:'01/01/2026',fte:1,cop:55514800,status:'Ejecutado'},
+  {id:'a-5',vp:'AUD',dept:'Auditoría',area:'Auditoría',tipo:'Proceso',plan:'De 2 Auditores Junior en proceso, se autorizó solo 1. Vacante restante eliminada. Equipo queda en 8 + 1 director.',fecha:null,fechaTxt:'Sin fecha',fte:1,cop:39203305,status:'Ejecutado'}
 ];
 
-let DATA = [];
+// ─── DATA MAP (O(1) lookup) — BUG #9 ─────────────────────
+let DATA_MAP = new Map();
+
+// ─── ESTADO GLOBAL ────────────────────────────────────────
+let DATA=[];
 let store={};
-let filter={vp:'all',tipo:'all'};
+let filter={vp:'all',tipo:'all',arch:'active'};
 let view='panel';
 let cronoSub='timeline';
+let sessionRole=sessionStorage.getItem('daabon_role')||null;
+let sessionPass=sessionStorage.getItem('daabon_pass')||null;
 
-// Credenciales
-let sessionRole = sessionStorage.getItem('daabon_role') || null;
-let sessionPass = sessionStorage.getItem('daabon_pass') || null;
-
-// ── SISTEMA DE LOGIN Y SEGURIDAD ──
-// Auto-inyecta las credenciales en cada petición para blindar la base de datos
-async function apiCall(action, paramsObj) {
-  if (sessionRole && sessionPass) {
-    paramsObj.role = sessionRole;
-    paramsObj.password = sessionPass;
-  }
-  const url = API_URL + '?' + new URLSearchParams({ action, data: JSON.stringify(paramsObj) });
-  const req = await fetch(url);
-  return await req.json();
+// ─── API ──────────────────────────────────────────────────
+// T6+T7: Toast notification system
+function showToast(msg,type='success',ms=2800){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=msg;t.className='toast show '+type;
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),ms);
 }
 
-async function doLogin() {
-  const role = document.getElementById('login-role').value;
-  const pass = document.getElementById('login-pass').value;
-  const btn = document.getElementById('btn-ingresar');
-  const err = document.getElementById('login-error');
-  
-  if(!pass) { err.textContent = 'Ingresa la contraseña'; err.style.display = 'block'; return; }
-  
-  btn.textContent = 'Verificando...'; err.style.display = 'none';
-  
-  const res = await apiCall('login', { role, password: pass });
-  if(res.ok) {
-    if(res.needsChange) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('change-pwd-screen').style.display = 'flex';
-      sessionStorage.setItem('temp_role', role);
-      sessionStorage.setItem('temp_pass', pass);
-    } else {
-      sessionRole = role; sessionPass = pass;
-      sessionStorage.setItem('daabon_role', role);
-      sessionStorage.setItem('daabon_pass', pass);
+async function apiCall(action,params){
+  if(sessionRole&&sessionPass){params.role=sessionRole;params.password=sessionPass;}
+  try{
+    const url=API_URL+'?'+new URLSearchParams({action,data:JSON.stringify(params)});
+    const r=await fetch(url);
+    return await r.json();
+  }catch(e){
+    console.error('apiCall error',e);
+    // T2: reset login button if network fails
+    const btn=document.getElementById('btn-ingresar');
+    if(btn&&btn.textContent==='Verificando...')btn.textContent='Ingresar';
+    return{error:'Sin conexión. Verifica tu internet e intenta de nuevo.'};
+  }
+}
+
+// ─── AUTH ─────────────────────────────────────────────────
+async function doLogin(){
+  const role=document.getElementById('login-role').value;
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-error');
+  const btn=document.getElementById('btn-ingresar');
+  if(!pass){err.textContent='Ingresa la contraseña';err.style.display='block';return;}
+  btn.textContent='Verificando...';err.style.display='none';
+  const res=await apiCall('login',{role,password:pass});
+  if(res.ok){
+    if(res.needsChange){
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('change-pwd-screen').style.display='flex';
+      sessionStorage.setItem('temp_role',role);
+      sessionStorage.setItem('temp_pass',pass);
+    }else{
+      sessionRole=role;sessionPass=pass;
+      sessionStorage.setItem('daabon_role',role);
+      sessionStorage.setItem('daabon_pass',pass);
       await initApp();
     }
-  } else {
-    err.textContent = res.error; err.style.display = 'block'; btn.textContent = 'Ingresar al tablero';
-  }
+  }else{err.textContent=res.error||'Error de autenticación';err.style.display='block';btn.textContent='Ingresar';}
 }
 
-async function doChangePwd() {
-  const p1 = document.getElementById('new-pass-1').value;
-  const p2 = document.getElementById('new-pass-2').value;
-  const err = document.getElementById('pwd-error');
-  const btn = document.getElementById('btn-cambiar');
-  
-  if(p1.length < 6) { err.textContent = 'Debe tener al menos 6 caracteres'; err.style.display='block'; return; }
-  if(p1 !== p2) { err.textContent = 'Las contraseñas no coinciden'; err.style.display='block'; return; }
-  
-  const role = sessionStorage.getItem('temp_role');
-  const oldP = sessionStorage.getItem('temp_pass');
-  btn.textContent = 'Guardando...'; err.style.display='none';
-  
-  const res = await apiCall('changePassword', { role, oldPassword: oldP, newPassword: p1 });
-  if(res.ok) {
-    sessionRole = role; sessionPass = p1;
-    sessionStorage.setItem('daabon_role', role);
-    sessionStorage.setItem('daabon_pass', p1);
+async function doChangePwd(){
+  const p1=document.getElementById('new-pass-1').value;
+  const p2=document.getElementById('new-pass-2').value;
+  const err=document.getElementById('pwd-error');
+  const btn=document.getElementById('btn-cambiar');
+  if(p1.length<6){err.textContent='Debe tener al menos 6 caracteres';err.style.display='block';return;}
+  if(p1!==p2){err.textContent='Las contraseñas no coinciden';err.style.display='block';return;}
+  const role=sessionStorage.getItem('temp_role');
+  const oldP=sessionStorage.getItem('temp_pass');
+  btn.textContent='Guardando...';err.style.display='none';
+  const res=await apiCall('changePassword',{role,oldPassword:oldP,newPassword:p1});
+  if(res.ok){
+    sessionRole=role;sessionPass=p1;
+    sessionStorage.setItem('daabon_role',role);
+    sessionStorage.setItem('daabon_pass',p1);
     await initApp();
-  } else {
-    err.textContent = 'Error al cambiar contraseña. Intenta de nuevo.'; err.style.display='block'; btn.textContent = 'Guardar y Continuar';
-  }
+  }else{err.textContent='Error al cambiar contraseña';err.style.display='block';btn.textContent='Guardar y continuar';}
 }
 
-function logout() {
-  sessionStorage.clear();
-  location.reload();
-}
+function logout(){sessionStorage.clear();location.reload();}
 
-// ── INICIALIZACIÓN DE LA APP ──
-async function initApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('change-pwd-screen').style.display = 'none';
-  
-  // Filtro inicial de seguridad visual en el frontend
-  if(sessionRole === 'admin') {
-    DATA = [...DATA_BASE];
-    document.getElementById('top-vp-badge').textContent = 'Global';
-  } else {
-    DATA = DATA_BASE.filter(i => i.vp === sessionRole);
-    document.getElementById('top-vp-badge').textContent = VP_NAMES[sessionRole];
-    document.getElementById('vp-filters').style.display = 'none'; // Ocultar filtro VP
-    filter.vp = sessionRole;
-  }
+// ─── INIT APP ─────────────────────────────────────────────
+async function initApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('change-pwd-screen').style.display='none';
+  // BUG #3: Mostrar loader y bloquear tabs mientras carga
+  document.getElementById('app-wrapper').style.display='block';
+  document.getElementById('content').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:16px">
+      <div style="width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--sky);border-radius:50%;animation:spin .8s linear infinite"></div>
+      <span style="color:var(--muted);font-size:13px">Cargando datos...</span>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>`;
+  document.querySelectorAll('.tab').forEach(t=>t.style.pointerEvents='none');
 
-  const res = await apiCall('getAll', {}); // El auto-inyector pone el role y pass
-  if(!res.ok) { logout(); return; }
+  // Filtrar data según rol
+  DATA=sessionRole==='admin'?[...DATA_BASE]:DATA_BASE.filter(i=>i.vp===sessionRole);
+  // BUG #9: rebuild DATA_MAP for O(1) lookup
+  DATA_MAP=new Map(DATA.map(i=>[i.id,i]));
+  document.getElementById('top-vp-badge').textContent=sessionRole==='admin'?'Global':sessionRole;
 
-  // Preparar Store
+  // Ocultar filtro VP para roles específicos
+  if(sessionRole!=='admin')document.getElementById('vp-filters').style.display='none';
+  else{filter.vp='all';}
+
+  // T14: Reset store to avoid session data leak between logins
+  store={};
+  // Inicializar store con defaults
   for(const it of DATA){
-    store[it.id] = { status: it.status, fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null };
+    const isEjec=it.status==='Ejecutado';
+    store[it.id]={
+      status:it.status,
+      fteCapturado:isEjec&&it.fte?it.fte:0,
+      copCapturado:isEjec&&it.cop?it.cop:0,
+      segs:[],planOverride:null,fechaOverride:null
+    };
   }
 
-  Object.keys(res.records).forEach(id => {
-    const rec = res.records[id];
-    if(!store[id]) store[id] = { status:'Pendiente', fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null };
-    if(rec.status) store[id].status = rec.status;
-    if(rec.fteCapturado) store[id].fteCapturado = Number(rec.fteCapturado);
-    if(rec.copCapturado) store[id].copCapturado = Number(rec.copCapturado);
-    
-    const it = DATA.find(x => x.id === id);
-    if(it) {
-      if(rec.planOverride) { store[id].planOverride = rec.planOverride; it.plan = rec.planOverride; }
-      if(rec.fechaOverride) { 
-        store[id].fechaOverride = rec.fechaOverride;
-        const [y, m, d] = rec.fechaOverride.split('-');
-        it.fecha = new Date(y, m-1, d);
-        it.fechaTxt = `${d}/${m}/${y}`;
+  // Cargar desde Sheets
+  const res=await apiCall('getAll',{});
+  if(!res.ok){
+    if(res.error&&res.error.includes('denegado')){logout();return;}
+    console.warn('Cargando en modo local:',res.error);
+  }else{
+    // Aplicar records
+    Object.keys(res.records).forEach(id=>{
+      const rec=res.records[id];
+      if(!store[id])store[id]={status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null,fechaOverride:null};
+      if(rec.status)store[id].status=rec.status;
+      if(rec.fteCapturado!=null)store[id].fteCapturado=Number(rec.fteCapturado)||0;
+      if(rec.copCapturado!=null)store[id].copCapturado=Number(rec.copCapturado)||0;
+      if(rec.segs&&rec.segs.length){
+        // B6: getAllRecords pushes oldest-first, frontend unshifts newest-first
+        // Reverse on load so display order matches what user saw during session
+        store[id].segs=[...rec.segs].reverse();
       }
-    }
-    if(rec.segs) store[id].segs = rec.segs;
-  });
-
-  res.customs.forEach(init => {
-    if(!DATA.find(x => x.id === init.id)){
-      let fechaObj = null;
-      if (init.fechaTxt !== 'Sin fecha') {
-        const [d, m, y] = init.fechaTxt.split('/');
-        fechaObj = new Date(y, m-1, d);
+      const it=DATA_MAP.get(id)||DATA.find(x=>x.id===id); // BUG #9: O(1) lookup
+      if(it){
+        if(rec.planOverride){store[id].planOverride=rec.planOverride;it.plan=rec.planOverride;}
+        if(rec.fechaOverride){
+          store[id].fechaOverride=rec.fechaOverride;
+          const[y,m,d]=rec.fechaOverride.split('-');
+          it.fecha=new Date(y,m-1,d);it.fechaTxt=`${d}/${m}/${y}`;
+        }
       }
-      DATA.push({...init, fecha: fechaObj});
-      if(!store[init.id]) store[init.id]={status:init.status, fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null};
+    });
+    // Cargar customs
+    if(res.customs&&res.customs.length){
+      res.customs.forEach(init=>{
+        if(!DATA.find(x=>x.id===init.id)){
+          let fechaObj=null;
+          if(init.fechaTxt&&init.fechaTxt!=='Sin fecha'){
+            const[d,m,y]=init.fechaTxt.split('/');
+            fechaObj=d&&m&&y?new Date(y,m-1,d):null;
+          }
+          DATA.push({...init,fecha:fechaObj});
+          DATA_MAP.set(init.id,DATA[DATA.length-1]); // T9: keep MAP in sync with customs from Sheets
+          if(!store[init.id])store[init.id]={status:init.status,fteCapturado:0,copCapturado:0,segs:[],planOverride:null,fechaOverride:null};
+        }
+      });
     }
-  });
+  }
 
-  document.getElementById('app-wrapper').style.display = 'block';
+  document.querySelectorAll('.tab').forEach(t=>t.style.pointerEvents='');
+  resetFilters();
   render();
 }
 
-async function saveRec(id) {
-  await apiCall('saveRecord', { id, record: store[id] });
+// FIX #7: Limpiar filtros al iniciar
+function resetFilters(){
+  filter={vp:sessionRole==='admin'?'all':sessionRole,tipo:'all',arch:'active'};
+  document.querySelectorAll('.chip').forEach(c=>{
+    if(c.dataset.f)c.classList.toggle('on',c.dataset.v==='all'||c.dataset.v===filter[c.dataset.f]);
+  });
 }
 
-// ── RENDERIZADO ──
-function filtered(){ 
-  return DATA.filter(i=>(filter.vp==='all'||i.vp===filter.vp)&&(filter.tipo==='all'||i.tipo===filter.tipo)); 
+async function saveRec(id){
+  // FIX #1: saveRec solo guarda el record, NO los segs (eso lo hace addSeg por separado)
+  const rec={...store[id]};
+  delete rec.segs; // No mandar segs en saveRecord — van por addSeg
+  const res=await apiCall('saveRecord',{id,record:rec});
+  // T6: feedback si falla
+  if(!res||res.error){
+    showToast('⚠️ No se pudo guardar en la nube. Verifica tu conexión.','error',4000);
+  }
 }
 
-function render(){ 
-  document.getElementById('content').innerHTML=''; 
-  if(view==='panel') renderPanel(); 
-  else if(view==='seguimiento') renderSeguimiento();
+// ─── FILTRADO ─────────────────────────────────────────────
+function filtered(){
+  return DATA.filter(i=>{
+    if(!store[i.id])return false; // F1: skip items without store entry
+    if(filter.vp!=='all'&&i.vp!==filter.vp)return false;
+    if(filter.tipo!=='all'&&i.tipo!==filter.tipo)return false;
+    if(filter.arch==='active'&&store[i.id].status==='Archivada')return false;
+    return true;
+  });
+}
+
+function statusClass(st){return SC[st]||'pend';}
+
+// FIX: Detectar Atrasado automáticamente (no modifica store, solo para display)
+function displayStatus(id){
+  // T4: null check — store may not have entry yet for customs loaded mid-render
+  if(!store[id])return'Pendiente';
+  const st=store[id].status;
+  if(st==='Ejecutado'||st==='Archivada'||st==='En curso')return st;
+  const it=DATA_MAP.get(id)||DATA.find(x=>x.id===id); // BUG #9: O(1) lookup
+  if(it&&it.fecha&&it.fecha<TODAY)return'Atrasado';
+  return st;
+}
+
+// ─── RENDER ───────────────────────────────────────────────
+function render(){
+  document.getElementById('content').innerHTML='';
+  // FIX #12: actualizar header total con filtro activo
+  const activas=filtered().filter(i=>store[i.id].status!=='Archivada');
+  document.getElementById('topbar-total').textContent=fmtCOP(activas.reduce((s,i)=>s+i.cop,0));
+  if(view==='panel')renderPanel();
+  else if(view==='seguimiento')renderSeguimiento();
   else renderCronograma();
 }
 
+// ─── PANEL EJECUTIVO ──────────────────────────────────────
 function renderPanel(){
-  const all = filtered();
-  const activas = all.filter(i => store[i.id].status !== 'Archivada');
-  const total = activas.length;
-  const done = activas.filter(i => store[i.id].status === 'Ejecutado').length;
-  const prog = activas.filter(i => store[i.id].status === 'En curso').length;
-  const copTotal = activas.reduce((s,i) => s + i.cop, 0);
-  const fteTotal = activas.reduce((s,i) => s + (i.fte||0), 0);
-  const copCap = activas.reduce((s,i) => s + (store[i.id].copCapturado||0), 0);
-  const fteCap = activas.reduce((s,i) => s + (store[i.id].fteCapturado||0), 0);
-  const atrasadas = activas.filter(i => (!i.fecha || i.fecha < TODAY) && store[i.id].status !== 'Ejecutado').length;
-  const archivadas = all.filter(i => store[i.id].status === 'Archivada').length;
+  const all=filtered();
+  const activas=all.filter(i=>store[i.id].status!=='Archivada');
+  const done=activas.filter(i=>store[i.id].status==='Ejecutado').length;
+  const prog=activas.filter(i=>store[i.id].status==='En curso').length;
+  const copTotal=activas.reduce((s,i)=>s+i.cop,0);
+  const fteTotal=activas.reduce((s,i)=>s+(i.fte||0),0);
+  const copCap=activas.reduce((s,i)=>s+(store[i.id].copCapturado||0),0);
+  const fteCap=activas.reduce((s,i)=>s+(store[i.id].fteCapturado||0),0);
+  const atrasadas=activas.filter(i=>{const d=displayStatus(i.id);return d==='Atrasado';}).length;
+  const archivadas=all.filter(i=>store[i.id].status==='Archivada').length;
 
-  document.getElementById('topbar-total').textContent = fmtCOP(copTotal);
-
-  let vpCards = '';
-  if(sessionRole === 'admin') {
-    const vps = ['VPDH','VPE','VPF','VLOP','AUD'];
-    vpCards = vps.map(vp => {
-      const items = DATA.filter(i => i.vp === vp && store[i.id].status !== 'Archivada' && (filter.tipo==='all'||i.tipo===filter.tipo));
-      if(!items.length) return '';
-      const d = items.filter(i => store[i.id].status === 'Ejecutado').length;
-      const cop = items.reduce((s,i) => s + i.cop, 0);
-      const pct = items.length ? Math.round(d/items.length*100) : 0;
-      return `<div class="vp-card" onclick="setVPFilter('${vp}')">
+  let cards='';
+  if(sessionRole==='admin'){
+    // Admin: tarjetas por VP
+    ['VPDH','VPE','VPF','VLOP','AUD'].forEach(vp=>{
+      const items=DATA.filter(i=>i.vp===vp&&store[i.id].status!=='Archivada'&&(filter.tipo==='all'||i.tipo===filter.tipo));
+      if(!items.length)return;
+      const d=items.filter(i=>store[i.id].status==='Ejecutado').length;
+      const cop=items.reduce((s,i)=>s+i.cop,0);
+      const capturado=items.reduce((s,i)=>s+(store[i.id].copCapturado||0),0);
+      const pct=items.length?Math.round(d/items.length*100):0;
+      cards+=`<div class="vp-card" onclick="setVPFilter('${vp}')">
         <div class="vp-card-head"><div class="vp-name">${VP_NAMES[vp]}</div><span class="vp-badge">${vp}</span></div>
-        <div class="vp-valor">${fmtCOP(cop)} <small>comp.</small></div>
+        <div class="vp-valor">${fmtCOP(cop)} <small>comprometido</small></div>
+        <div class="vp-cap">Capturado: ${fmtCOP(capturado)}</div>
         <div class="vp-bar"><div class="vp-bar-fill" style="width:${pct}%"></div></div>
-        <div class="vp-footer"><span><b>${d}</b>/${items.length} completadas</span><span><b>${pct}%</b></span></div>
+        <div class="vp-footer"><span><b>${d}</b>/${items.length} ejecutadas</span><span><b>${pct}%</b></span></div>
       </div>`;
-    }).join('');
+    });
+  }else{
+    // FIX #8: Para VP no-admin, mostrar tarjetas por departamento
+    const depts=[...new Set(DATA.map(i=>i.dept))];
+    depts.forEach(dept=>{
+      const items=DATA.filter(i=>i.dept===dept&&store[i.id].status!=='Archivada'&&(filter.tipo==='all'||i.tipo===filter.tipo));
+      if(!items.length)return;
+      const d=items.filter(i=>store[i.id].status==='Ejecutado').length;
+      const cop=items.reduce((s,i)=>s+i.cop,0);
+      const capturado=items.reduce((s,i)=>s+(store[i.id].copCapturado||0),0);
+      const pct=items.length?Math.round(d/items.length*100):0;
+      cards+=`<div class="vp-card" onclick="setDeptFilter('${dept}')">
+        <div class="vp-card-head"><div class="vp-name" style="font-size:14px">${dept}</div></div>
+        <div class="vp-valor">${fmtCOP(cop)} <small>comprometido</small></div>
+        <div class="vp-cap">Capturado: ${fmtCOP(capturado)}</div>
+        <div class="vp-bar"><div class="vp-bar-fill" style="width:${pct}%"></div></div>
+        <div class="vp-footer"><span><b>${d}</b>/${items.length} ejecutadas</span><span><b>${pct}%</b></span></div>
+      </div>`;
+    });
   }
 
   document.getElementById('content').innerHTML=`
     <div class="kpi-strip">
-      <div class="kpi k0"><div class="kpi-num">${total}</div><div class="kpi-lbl">Activas</div><div class="kpi-det">${done} listas · ${prog} en curso</div></div>
+      <div class="kpi k0"><div class="kpi-num">${activas.length}</div><div class="kpi-lbl">Iniciativas activas</div><div class="kpi-det">${done} ejecutadas · ${prog} en curso</div></div>
       <div class="kpi k1"><div class="kpi-num">${fmtCOP(copTotal)}</div><div class="kpi-lbl">COP comprometido</div><div class="kpi-det">Capturado: <b>${fmtCOP(copCap)}</b></div></div>
-      <div class="kpi k2"><div class="kpi-num">${fteTotal}</div><div class="kpi-lbl">FTE comprometido</div><div class="kpi-det">Capturadas: <b>${fteCap}</b></div></div>
-      <div class="kpi k4"><div class="kpi-num">${atrasadas}</div><div class="kpi-lbl">Atrasadas / Sin Fecha</div><div class="kpi-det">Atención requerida</div></div>
+      <div class="kpi k2"><div class="kpi-num">${fteTotal}</div><div class="kpi-lbl">FTE comprometido</div><div class="kpi-det">Capturado: <b>${fteCap}</b></div></div>
+      <div class="kpi k4"><div class="kpi-num">${atrasadas}</div><div class="kpi-lbl">Atrasadas</div><div class="kpi-det">Requieren atención inmediata</div></div>
       <div class="kpi k3"><div class="kpi-num">${archivadas}</div><div class="kpi-lbl">Archivadas</div><div class="kpi-det">No afectan métricas</div></div>
     </div>
-    ${sessionRole === 'admin' ? `<div class="sec-h"><div class="sec-title">Avance por Vicepresidencia</div></div><div class="vp-grid">${vpCards}</div>` : ''}
-  `;
+    <div class="sec-h"><div class="sec-title">${sessionRole==='admin'?'Avance por Vicepresidencia':'Avance por Departamento'}</div><div class="sec-sub">Clic para filtrar</div></div>
+    <div class="${sessionRole==='admin'?'vp-grid':'dept-grid'}">${cards}</div>`;
 }
 
 function setVPFilter(vp){
-  filter.vp = vp;
-  document.querySelectorAll('.chip[data-f="vp"]').forEach(c => { c.classList.remove('on'); if(c.dataset.v === vp) c.classList.add('on'); });
-  view = 'seguimiento';
-  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); if(t.dataset.view === 'seguimiento') t.classList.add('active'); });
+  filter.vp=vp;
+  document.querySelectorAll('.chip[data-f="vp"]').forEach(c=>{c.classList.remove('on');if(c.dataset.v===vp)c.classList.add('on');});
+  view='seguimiento';
+  document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active');if(t.dataset.view==='seguimiento')t.classList.add('active');});
   render();
 }
 
-function renderSeguimiento(){
-  const items = filtered();
-  const byVP = {};
-  items.forEach(i => { (byVP[i.vp] = byVP[i.vp] || {name: VP_NAMES[i.vp], depts: {}}); (byVP[i.vp].depts[i.dept] = byVP[i.vp].depts[i.dept] || []).push(i); });
+function setDeptFilter(dept){
+  // Para VP no-admin, filtrar por dept mostrando seguimiento
+  view='seguimiento';
+  document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active');if(t.dataset.view==='seguimiento')t.classList.add('active');});
+  render();
+  // Scroll to dept section
+  setTimeout(()=>{
+    const el=document.querySelector(`[data-dept="${dept}"]`);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },100);
+}
 
-  let html = '';
-  Object.keys(byVP).forEach(vp => {
-    const {name, depts} = byVP[vp];
-    let rows = '';
-    
-    Object.keys(depts).forEach(dept => {
-      rows += `<tr class="dept-sep"><td colspan="9">▸ ${dept}</td></tr>`;
-      depts[dept].forEach(i => {
-        const rec = store[i.id];
-        const isArchived = rec.status === 'Archivada';
-        const sc = SC[rec.status] || 'pend';
-        const late = (!i.fecha || i.fecha < TODAY) && !['Ejecutado','Archivada'].includes(rec.status);
-        const ns = rec.segs.length;
-        
-        rows += `<tr class="data-row ${late ? 'late-row' : ''} ${isArchived ? 'archived-row' : ''}">
-          <td><div class="plan-text">${i.plan}</div><div class="plan-area">${i.area}</div></td>
+// ─── SEGUIMIENTO ──────────────────────────────────────────
+function renderSeguimiento(){
+  const items=filtered();
+  const byVP={};
+  items.forEach(i=>{
+    (byVP[i.vp]=byVP[i.vp]||{name:VP_NAMES[i.vp],depts:{}});
+    (byVP[i.vp].depts[i.dept]=byVP[i.vp].depts[i.dept]||[]).push(i);
+  });
+
+  let html='';
+  Object.keys(byVP).forEach(vp=>{
+    const{name,depts}=byVP[vp];
+    let rows='';
+    Object.keys(depts).forEach(dept=>{
+      rows+=`<tr class="dept-sep" data-dept="${dept}"><td colspan="9">▸ ${dept}</td></tr>`;
+      depts[dept].forEach(i=>{
+        const rec=store[i.id];
+        const dSt=displayStatus(i.id); // FIX: usar displayStatus en lugar de rec.status directamente
+        const sc=statusClass(dSt);
+        const isArchived=rec.status==='Archivada';
+        const isLate=dSt==='Atrasado';
+        const ns=(rec.segs&&rec.segs.length)||0; // F2: guard segs undefined
+        rows+=`<tr class="data-row${isLate?' late-row':''}${isArchived?' archived-row':''}">
+          <td><div class="plan-text">${esc(i.plan)}</div><div class="plan-area">${i.area}</div></td>
           <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tec':'Proceso'}</span></td>
-          <td><div class="impact-val">${i.fte ? '-'+fmtN(i.fte) : '—'}</div></td>
-          <td><div class="impact-sub" style="font-weight:600">${fmtCOP(i.cop)}</div></td>
-          <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
-          <td><span class="st-btn ${sc}" style="cursor:default; min-width:70px">${rec.status}</span></td>
+          <td><div class="impact-val">${i.fte?'-'+fmtN(i.fte):'—'}</div></td>
+          <td><div class="impact-val" style="font-size:11.5px">${fmtCOP(i.cop)}</div></td>
+          <td class="fecha-cell${isLate?' late':''}">${i.fechaTxt}</td>
+          <td><span class="st-btn ${sc}">${dSt}</span></td>
           <td><div class="impact-val" style="color:var(--green)">${rec.fteCapturado||0}</div></td>
-          <td><div class="impact-sub" style="font-weight:600; color:var(--green)">${fmtCOP(rec.copCapturado||0)}</div></td>
+          <td><div class="impact-val" style="font-size:11.5px;color:var(--green)">${fmtCOP(rec.copCapturado||0)}</div></td>
           <td style="white-space:nowrap">
-            <button class="seg-btn" onclick="openModal('${i.id}', false)">Seguimiento ${ns?`(${ns})`:''}</button>
-            <button class="edit-icon-btn" onclick="openModal('${i.id}', true)" title="Editar Iniciativa">✏️</button>
+            <button class="seg-btn" onclick="openModal('${i.id}',false)">Seguimiento${ns?` (${ns})`:''}</button>
+            <button class="edit-icon-btn" onclick="openModal('${i.id}',true)" title="Editar">✏️</button>
           </td>
         </tr>`;
       });
     });
-    
-    html += `<div class="sec-h" style="margin-top:${html?'24px':'0'}">
+
+    const vItems=items.filter(x=>x.vp===vp);
+    const vDone=vItems.filter(x=>store[x.id].status==='Ejecutado').length;
+    const vCop=vItems.reduce((s,x)=>s+x.cop,0);
+
+    html+=`<div class="sec-h" style="margin-top:${html?'24px':'0'}">
       <div class="sec-title">${name}</div>
-      <button class="btn primary" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="sec-sub">${vDone}/${vItems.length} ejecutadas · ${fmtCOP(vCop)}</span>
+        <button class="btn-nueva" onclick="openNuevaForm('${vp}')">＋ Nueva iniciativa</button>
+      </div>
     </div>
     <div id="nueva-form-${vp}"></div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th style="width:28%">Iniciativa</th><th>Tipo</th><th>FTE Comp.</th><th>COP Comp.</th><th>Fecha</th><th>Estado</th><th>FTE Cap.</th><th>COP Cap.</th><th>Acciones</th></tr></thead>
+      <thead><tr>
+        <th style="width:28%">Iniciativa</th><th>Tipo</th><th>FTE Comp.</th>
+        <th>COP Comp.</th><th>Fecha</th><th>Estado</th>
+        <th>FTE Cap.</th><th>COP Cap.</th><th>Acciones</th>
+      </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
   });
-  document.getElementById('content').innerHTML = html || '<p style="color:var(--muted);padding:20px">No hay iniciativas para mostrar.</p>';
+
+  document.getElementById('content').innerHTML=html||'<p style="color:var(--muted);padding:20px">No hay iniciativas para los filtros seleccionados.</p>';
 }
 
 function openNuevaForm(vp){
-  const c = document.getElementById('nueva-form-'+vp);
-  if(!c) return;
-  const topts = ['Proceso','Tecnologia'].map(t=>`<option>${t}</option>`).join('');
-  c.innerHTML=`<div class="edit-box" style="background:#fff; border-color:var(--sky)">
-    <div style="font-family:var(--display); font-size:16px; color:var(--navy); margin-bottom:12px">Crear Nueva Iniciativa</div>
-    <textarea id="nf-plan" placeholder="Describe la acción a realizar..." style="border-color:var(--line)"></textarea>
-    <div style="display:flex; gap:10px; margin-bottom:10px">
-      <input type="text" id="nf-dept" placeholder="Departamento" style="border-color:var(--line)">
-      <select id="nf-tipo" style="border-color:var(--line)">${topts}</select>
+  const c=document.getElementById('nueva-form-'+vp);
+  if(!c)return;
+  const topts=['Proceso','Tecnologia'].map(t=>`<option>${t}</option>`).join('');
+  c.innerHTML=`<div class="edit-box" style="background:var(--skyBg);border-color:var(--sky)">
+    <div style="font-family:var(--display);font-size:16px;color:var(--navy);margin-bottom:12px">Crear Nueva Iniciativa</div>
+    <label>Plan de acción</label><textarea id="nf-plan" style="border-color:var(--line)" placeholder="Describe la acción a realizar..."></textarea>
+    <div style="display:flex;gap:10px;margin-bottom:10px">
+      <div style="flex:1"><label>Departamento</label><input id="nf-dept" style="border-color:var(--line)" placeholder="Departamento"></div>
+      <div style="flex:1"><label>Tipo</label><select id="nf-tipo" style="border-color:var(--line)">${topts}</select></div>
     </div>
-    <div style="display:flex; gap:10px">
-      <input type="number" id="nf-fte" placeholder="FTE Comprometido" style="border-color:var(--line)">
-      <input type="number" id="nf-cop" placeholder="COP (en Millones)" style="border-color:var(--line)">
-      <input type="date" id="nf-fecha" style="border-color:var(--line)">
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><label>FTE</label><input type="number" id="nf-fte" style="border-color:var(--line)" placeholder="0"></div>
+      <div style="flex:1"><label>COP (Millones)</label><input type="number" id="nf-cop" style="border-color:var(--line)" placeholder="0"></div>
+      <div style="flex:1"><label>Fecha</label><input type="date" id="nf-fecha" style="border-color:var(--line)"></div>
     </div>
-    <div style="text-align:right; margin-top:12px">
+    <div style="text-align:right;margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
       <button class="btn ghost" onclick="document.getElementById('nueva-form-${vp}').innerHTML=''">Cancelar</button>
-      <button class="btn primary" style="background:var(--sky)" onclick="guardarNueva('${vp}')">Guardar Iniciativa</button>
+      <button class="btn primary" onclick="guardarNueva('${vp}')">Guardar iniciativa</button>
     </div>
   </div>`;
 }
 
 async function guardarNueva(vp){
-  const plan = document.getElementById('nf-plan').value.trim();
-  if(!plan){ alert('El plan es obligatorio'); return; }
-  const dept = document.getElementById('nf-dept').value.trim() || 'General';
-  const tipo = document.getElementById('nf-tipo').value;
-  const fte = parseFloat(document.getElementById('nf-fte').value)||null;
-  const cop = (parseFloat(document.getElementById('nf-cop').value)||0)*1e6;
-  const fVal = document.getElementById('nf-fecha').value;
-  
-  let fechaObj = null;
-  let fTxt = 'Sin fecha';
-  if(fVal) {
-    const [y,m,d] = fVal.split('-');
-    fechaObj = new Date(y, m-1, d);
-    fTxt = `${d}/${m}/${y}`;
+  const plan=document.getElementById('nf-plan').value.trim();
+  if(!plan){
+    document.getElementById('nf-plan').style.border='2px solid var(--red)';
+    document.getElementById('nf-plan').placeholder='⚠️ Este campo es obligatorio';
+    return;
   }
-
-  const id = 'custom-'+Date.now();
-  const init = { id, vp, dept, area:dept, tipo, plan, fechaTxt: fTxt, fte, cop, status:'Pendiente' };
-  
-  DATA.push({...init, fecha: fechaObj});
-  store[id] = { status:'Pendiente', fteCapturado:0, copCapturado:0, segs:[], planOverride:null, fechaOverride:null };
-  
-  await apiCall('saveNew', { initiative: init });
+  // BUG #6: bloquear botón mientras guarda para evitar duplicados
+  const btnGuardar=document.querySelector(`#nueva-form-${vp} .btn.primary`);
+  if(btnGuardar){btnGuardar.disabled=true;btnGuardar.textContent='Guardando...';}
+  const dept=document.getElementById('nf-dept').value.trim()||'General';
+  const tipo=document.getElementById('nf-tipo').value;
+  const fte=parseFloat(document.getElementById('nf-fte').value)||null;
+  const cop=(parseFloat(document.getElementById('nf-cop').value)||0)*1e6;
+  const fVal=document.getElementById('nf-fecha').value;
+  let fechaObj=null,fTxt='Sin fecha';
+  if(fVal){const[y,m,d]=fVal.split('-');fechaObj=new Date(y,m-1,d);fTxt=`${d}/${m}/${y}`;}
+  const id='custom-'+Date.now();
+  const init={id,vp,dept,area:dept,tipo,plan,fechaTxt:fTxt,fte,cop,status:'Pendiente'};
+  DATA.push({...init,fecha:fechaObj});
+  DATA_MAP.set(id,DATA[DATA.length-1]);
+  store[id]={status:'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null,fechaOverride:null};
+  await apiCall('saveNew',{initiative:{...init,createdBy:sessionRole}});
   render();
 }
 
-// ── CRONOGRAMA ──
+// ─── CRONOGRAMA ───────────────────────────────────────────
 function renderCronograma(){
-  const items = filtered();
-  const vps = sessionRole === 'admin' ? ['VPDH','VPE','VPF','VLOP','AUD'] : [sessionRole];
-  
-  const switcher = `<div class="crono-switch">
+  const items=filtered().filter(i=>store[i.id].status!=='Archivada');
+  const vps=sessionRole==='admin'?['VPDH','VPE','VPF','VLOP','AUD']:[sessionRole];
+  const sw=`<div class="crono-switch">
     <button class="c-btn ${cronoSub==='timeline'?'active':''}" onclick="setCronoSub('timeline')">🗓 Línea de tiempo</button>
     <button class="c-btn ${cronoSub==='lista'?'active':''}" onclick="setCronoSub('lista')">☰ Lista</button>
   </div>`;
-
-  let body = '';
-  vps.forEach(vp => {
-    const arr = items.filter(i => i.vp === vp && store[i.id].status !== 'Archivada');
-    if(!arr.length) return;
-    const cop = arr.reduce((s,i) => s + i.cop, 0);
-    if(cronoSub === 'timeline') body += buildTL(arr, VP_NAMES[vp], fmtCOP(cop));
-    else body += buildLista(arr, VP_NAMES[vp]);
+  let body='';
+  vps.forEach(vp=>{
+    const arr=items.filter(i=>i.vp===vp);
+    if(!arr.length)return;
+    const cop=arr.reduce((s,i)=>s+i.cop,0);
+    body+=cronoSub==='timeline'?buildTL(arr,VP_NAMES[vp],fmtCOP(cop)):buildLista(arr,VP_NAMES[vp]);
   });
-
-  const leg = `<div class="leg">
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--greenBg);border:1.5px solid var(--greenLine);margin-right:4px"></span>Completado</span>
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1.5px solid var(--line);margin-right:4px"></span>Pendiente / En curso</span>
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1.5px solid var(--redLine);margin-right:4px"></span>Atrasado / Sin Fecha</span>
+  const leg=`<div class="leg">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--green);margin-right:4px"></span>Ejecutado</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--grayBg);border:1px solid var(--line);margin-right:4px"></span>Pendiente/En curso</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--redBg);border:1px solid var(--redLine);margin-right:4px"></span>Atrasado</span>
     <span style="margin-left:auto;font-size:11px">Clic para abrir detalles</span>
   </div>`;
-  document.getElementById('content').innerHTML = switcher + body + leg;
+  document.getElementById('content').innerHTML=sw+body+leg;
 }
 
-function tlColor(i){
-  const st = store[i.id].status;
-  if(['Ejecutado'].includes(st)) return 'tl-done';
-  if(!i.fecha || i.fecha < TODAY) return 'tl-late';
-  return 'tl-pend';
+function tlColorFn(i){
+  const d=displayStatus(i.id);
+  if(d==='Ejecutado')return'tl-done';
+  if(d==='Atrasado')return'tl-late';
+  return'tl-pend';
 }
 function tlImpact(i){
-  const parts=[];
-  if(i.fte) parts.push('-'+fmtN(i.fte)+' FTE');
-  if(i.cop) parts.push(fmtCOP(i.cop));
-  return parts.join(' · ')||'';
+  const p=[];
+  if(i.fte)p.push('-'+fmtN(i.fte)+' FTE');
+  if(i.cop)p.push(fmtCOP(i.cop));
+  return p.join(' · ')||'';
 }
 function buildTL(arr,label,val){
-  const buckets = Array.from({length:12},()=>[]);
-  const nodate = [];
-  arr.forEach(i => { if(i.fecha && i.fecha.getFullYear()===2026) buckets[i.fecha.getMonth()].push(i); else nodate.push(i); });
-  const maxStack = Math.max(...buckets.map(b=>b.length),1);
-  const tlH = Math.max(90, 16+maxStack*68+12);
-  const progPct = Math.round(arr.filter(i=>['Ejecutado'].includes(store[i.id].status)).length/arr.length*100) || 0;
-  
+  const buckets=Array.from({length:12},()=>[]);
+  const nodate=[];
+  arr.forEach(i=>{if(i.fecha&&i.fecha.getFullYear()===2026)buckets[i.fecha.getMonth()].push(i);else nodate.push(i);});
+  const maxStack=Math.max(...buckets.map(b=>b.length),1);
+  const tlH=Math.max(90,16+maxStack*68+12);
+  const progPct=Math.round(arr.filter(i=>displayStatus(i.id)==='Ejecutado').length/arr.length*100)||0;
   let cols='';
-  for(let m=0; m<12; m++){
-    let items2='';
-    buckets[m].forEach((i)=>{
-      const cls = tlColor(i);
-      const imp = tlImpact(i);
-      items2 += `<div class="tl-item" onclick="openModal('${i.id}', false)" title="${i.plan}">
+  for(let m=0;m<12;m++){
+    let its='';
+    buckets[m].forEach(i=>{
+      const cls=tlColorFn(i);const imp=tlImpact(i);
+      its+=`<div class="tl-item" onclick="openModal('${i.id}',false)" title="${esc(i.plan)}">
         <span class="tl-chip ${cls}"><span class="tl-dept">${i.dept}</span>${imp?`<span class="tl-imp">${imp}</span>`:''}</span>
       </div>`;
     });
-    cols+=`<div class="tl-col">${items2}</div>`;
+    cols+=`<div class="tl-col">${its}</div>`;
   }
-  const nd = nodate.length ? `<div class="tl-nodate"><span class="tl-nd-lbl">Sin fecha:</span>${nodate.map(i=>{
-    const cls=tlColor(i); const imp=tlImpact(i);
-    return `<span class="tl-nd-chip ${cls}" onclick="openModal('${i.id}', false)" title="${i.plan}">${i.dept}${imp?' · '+imp:''}</span>`;
-  }).join('')}</div>` : '';
-  
-  return `<div class="tl-wrap">
+  const nd=nodate.length?`<div class="tl-nodate"><span class="tl-nd-lbl">Sin fecha:</span>${nodate.map(i=>{
+    const cls=tlColorFn(i);const imp=tlImpact(i);
+    return`<span class="tl-nd-chip ${cls}" onclick="openModal('${i.id}',false)" title="${esc(i.plan)}">${i.dept}${imp?' · '+imp:''}</span>`;
+  }).join('')}</div>`:'';
+  return`<div class="tl-wrap">
     <div class="tl-head"><span class="tl-vp">${label}</span><span class="tl-vp-val">${val}</span></div>
     <div class="tl-scroll"><div class="tl-track" style="height:${tlH+30}px">
       <div class="tl-months">${MONTHS.map(m=>`<div class="tl-m">${m}</div>`).join('')}</div>
@@ -783,137 +936,185 @@ function buildTL(arr,label,val){
     </div></div>${nd}
   </div>`;
 }
-
 function buildLista(arr,label){
-  const sorted = [...arr].sort((a,b)=>{ if(!a.fecha&&!b.fecha) return 0; if(!a.fecha) return -1; if(!b.fecha) return 1; return a.fecha-b.fecha; });
-  const rows = sorted.map(i=>{
-    const sc = SC[store[i.id].status] || 'pend';
-    const late = (!i.fecha || i.fecha < TODAY) && !['Ejecutado'].includes(store[i.id].status);
-    return `<tr onclick="openModal('${i.id}', false)">
+  const sorted=[...arr].sort((a,b)=>{if(!a.fecha&&!b.fecha)return 0;if(!a.fecha)return 1;if(!b.fecha)return -1;return a.fecha-b.fecha;});
+  const rows=sorted.map(i=>{
+    const sc=statusClass(displayStatus(i.id));
+    const late=displayStatus(i.id)==='Atrasado';
+    return`<tr onclick="openModal('${i.id}',false)">
       <td><b>${i.dept}</b></td>
-      <td style="max-width:340px">${i.plan.length>70?i.plan.slice(0,68)+'…':i.plan}</td>
+      <td style="max-width:340px">${esc(i.plan.length>70?i.plan.slice(0,68)+'…':i.plan)}</td>
       <td><span class="tipo-tag ${i.tipo==='Tecnologia'?'tec':'pro'}">${i.tipo==='Tecnologia'?'Tec':'Proceso'}</span></td>
-      <td class="fecha-cell ${late?'late':''}">${i.fechaTxt}</td>
-      <td><span class="st-btn ${sc}" style="cursor:default">${store[i.id].status}</span></td>
+      <td class="fecha-cell${late?' late':''}">${i.fechaTxt}</td>
+      <td><span class="st-btn ${sc}">${displayStatus(i.id)}</span></td>
     </tr>`;
   }).join('');
-  return `<div class="lista-wrap">
+  return`<div class="lista-wrap">
     <div class="lista-head"><span class="lista-vp">${label}</span></div>
     <table class="lista-tbl"><thead><tr><th>Departamento</th><th>Iniciativa</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>
   </div>`;
 }
+function setCronoSub(v){cronoSub=v;renderCronograma();}
 
-function setCronoSub(v){ cronoSub=v; renderCronograma(); }
+// ─── MODAL ────────────────────────────────────────────────
+function openModal(id,isEdit){
+  const i=DATA_MAP.get(id)||DATA.find(x=>x.id===id); // BUG #9: O(1) lookup
+  const rec=store[id];
+  // T5: null check — defensive guard
+  if(!i||!rec){console.warn('openModal: id not found',id);return;}
+  const dSt=displayStatus(id);
+  const sc=statusClass(dSt);
 
-// ── MODAL LÓGICA (LECTURA VS EDICIÓN) ──
-function openModal(id, isEditMode) {
-  const i = DATA.find(x => x.id === id);
-  const rec = store[id];
-  const opts = STATUSES.map(s => `<option value="${s}" ${s===rec.status?'selected':''}>${s}</option>`).join('');
-  
-  const segs = rec.segs.length
-    ? rec.segs.map(s => `<div class="seg-item"><div class="si-meta"><b>${s.autor}</b><span>${s.fecha}</span></div><div class="si-txt">${esc(s.txt)}</div></div>`).join('')
-    : '<div class="seg-empty">Sin seguimientos.</div>';
+  // FIX #3 & #6: Estado con color en modal
+  const stBadge=`<span class="st-btn ${sc}" style="cursor:default">${dSt}</span>`;
 
-  let bodyHtml = '';
+  const segs=(rec.segs&&rec.segs.length) // F2: guard segs undefined
+    ?rec.segs.map(s=>`<div class="seg-item"><div class="si-meta"><b>${esc(s.autor)}</b><span>${s.fecha}</span></div><div class="si-txt">${esc(s.txt)}</div></div>`).join('')
+    :'<div class="seg-empty">Sin seguimientos registrados.</div>';
 
-  if(isEditMode) {
-    bodyHtml = `
-      <div class="edit-box">
-        <label style="font-size:10px;font-weight:700;color:var(--amber)">PLAN DE ACCIÓN</label>
-        <textarea id="edit-plan">${esc(i.plan)}</textarea>
-        
-        <div style="display:flex; gap:10px">
-          <div style="flex:1"><label style="font-size:10px;font-weight:700;color:var(--amber)">ESTADO</label><select id="edit-st">${opts}</select></div>
-          <div style="flex:1"><label style="font-size:10px;font-weight:700;color:var(--amber)">FECHA</label><input type="date" id="edit-fecha" value="${i.fecha ? i.fecha.toISOString().split('T')[0] : ''}"></div>
-        </div>
+  const opts=STATUSES_SELECT.map(s=>`<option value="${s}"${s===rec.status?' selected':''}>${s}</option>`).join('');
 
-        <div style="display:flex; gap:10px; margin-top:8px">
-          <div style="flex:1"><label style="font-size:10px;font-weight:700;color:var(--amber)">FTE CAPTURADO REAL</label><input type="number" step="0.5" id="edit-fte" value="${rec.fteCapturado||0}"></div>
-          <div style="flex:1"><label style="font-size:10px;font-weight:700;color:var(--amber)">COP CAPTURADO (Millones)</label><input type="number" id="edit-cop" value="${Math.round((rec.copCapturado||0)/1e6)}"></div>
-        </div>
-
-        <div style="text-align:right; margin-top:12px">
-          <button class="btn ghost" onclick="closeModal()">Cancelar</button>
-          <button class="btn primary" style="background:var(--amber)" onclick="saveEdits('${id}')">Guardar Cambios</button>
-        </div>
+  let body='';
+  if(isEdit){
+    body=`<div class="edit-box">
+      <label>Plan de acción</label>
+      <textarea id="edit-plan">${esc(i.plan)}</textarea>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><label>Estado</label><select id="edit-st">${opts}</select></div>
+        <div style="flex:1"><label>Fecha compromiso</label><input type="date" id="edit-fecha" value="${i.fecha?i.fecha.toISOString().split('T')[0]:''}"></div>
       </div>
-    `;
-  } else {
-    bodyHtml = `
-      <div class="mrow" style="background:var(--paper); padding:12px; border-radius:8px; border:1px solid var(--line)">
-        <div class="mf"><div class="ml">Estado</div><div class="mv" style="color:${rec.status==='Archivada'?'var(--gray)':'var(--navy)'}">${rec.status}</div></div>
-        <div class="mf"><div class="ml">Impacto</div><div class="mv">${i.fte?'-'+i.fte+' FTE':''} ${fmtCOP(i.cop)}</div></div>
-        <div class="mf"><div class="ml">Capturado</div><div class="mv" style="color:var(--green)">${rec.fteCapturado||0} FTE · ${fmtCOP(rec.copCapturado)}</div></div>
+      <div style="display:flex;gap:10px;margin-top:0">
+        <div style="flex:1"><label>FTE capturado real</label><input type="number" step="0.5" id="edit-fte" value="${rec.fteCapturado||0}"></div>
+        <div style="flex:1"><label>COP capturado (Millones)</label><input type="number" id="edit-cop" value="${Math.round((rec.copCapturado||0)/1e6)}"></div>
       </div>
-      
-      <div class="add-box">
-        <label style="font-size:10.5px; font-weight:700; color:var(--sky); display:block; margin-bottom:6px">AGREGAR SEGUIMIENTO</label>
-        <textarea id="seg-txt" placeholder="Registra un avance, decisión o novedad..."></textarea>
-        <div class="add-actions"><button class="btn primary" onclick="addSeg('${id}')">Guardar nota</button></div>
+      <div id="modal-inline-msg" style="display:none;color:var(--red);font-size:12px;font-weight:600;padding:8px 10px;background:var(--redBg);border-radius:7px;margin-bottom:8px;border:1px solid var(--redLine)"></div>
+      <div style="text-align:right;margin-top:4px;display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+        <button class="btn primary" style="background:var(--amber)" onclick="saveEdits('${id}')">Guardar cambios</button>
       </div>
-      <div class="seg-list">${segs}</div>
-    `;
+    </div>
+    <div class="seg-section-h">Bitácora de seguimiento</div>
+    <div class="seg-list">${segs}</div>`;
+  }else{
+    // FIX #6: mostrar estado con color
+    body=`<div class="mrow" style="background:var(--paper);padding:12px;border-radius:8px;border:1px solid var(--line);margin-bottom:16px">
+      <div class="mf"><div class="ml">Estado</div><div class="mv">${stBadge}</div></div>
+      <div class="mf"><div class="ml">Impacto comprometido</div><div class="mv">${i.fte?'-'+i.fte+' FTE &nbsp;':''} ${fmtCOP(i.cop)}</div></div>
+      <div class="mf"><div class="ml">Capturado real</div><div class="mv" style="color:var(--green)">${rec.fteCapturado||0} FTE · ${fmtCOP(rec.copCapturado)}</div></div>
+    </div>
+    <div class="add-box" id="add-box-${id}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <label style="font-size:10.5px;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px">Agregar seguimiento</label>
+        <span style="font-size:11px;color:var(--muted);font-weight:600">Como: <b style="color:var(--navy)">${getAutor()}</b></span>
+      </div>
+      <textarea id="seg-txt" placeholder="Registra un avance, decisión, novedad o próximo paso…"></textarea>
+      <div class="add-actions">
+        <button class="btn ghost" onclick="closeModal()">Cerrar</button>
+        <button class="btn primary" onclick="addSeg('${id}')">Guardar nota</button>
+      </div>
+    </div>
+    <div class="seg-section-h">Historial</div>
+    <div class="seg-list">${segs}</div>`;
   }
 
-  document.getElementById('modal').innerHTML = `
+  document.getElementById('modal').innerHTML=`
     <div class="modal-top">
       <button class="modal-close" onclick="closeModal()">×</button>
-      <div class="modal-tag">${VP_NAMES[i.vp]} · ${i.dept}</div>
+      <div class="modal-tag">${VP_NAMES[i.vp]} · ${i.dept} · ${i.tipo==='Tecnologia'?'Tecnología':'Decisión/Proceso'}</div>
       <div class="modal-ttl">${esc(i.plan)}</div>
     </div>
-    <div class="modal-body">${bodyHtml}</div>
-  `;
+    <div class="modal-body">${body}</div>`;
   document.getElementById('overlay').classList.add('show');
 }
 
-function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
 
-async function saveEdits(id) {
-  const txt = document.getElementById('edit-plan').value.trim();
-  const st = document.getElementById('edit-st').value;
-  const fte = parseFloat(document.getElementById('edit-fte').value)||0;
-  const cop = (parseFloat(document.getElementById('edit-cop').value)||0)*1e6;
-  const dateVal = document.getElementById('edit-fecha').value;
-  
-  if(!txt) return;
-  const i = DATA.find(x => x.id === id);
-  
-  i.plan = txt;
-  store[id].planOverride = txt;
-  store[id].status = st;
-  store[id].fteCapturado = fte;
-  store[id].copCapturado = cop;
-  store[id].fechaOverride = dateVal;
-  
-  if(dateVal) { const [y,m,d] = dateVal.split('-'); i.fecha = new Date(y, m-1, d); i.fechaTxt = `${d}/${m}/${y}`; } 
-  else { i.fecha = null; i.fechaTxt = 'Sin fecha'; }
+async function saveEdits(id){
+  const txt=document.getElementById('edit-plan').value.trim();
+  const st=document.getElementById('edit-st').value;
+  const fte=parseFloat(document.getElementById('edit-fte').value)||0;
+  const cop=(parseFloat(document.getElementById('edit-cop').value)||0)*1e6;
+  const dateVal=document.getElementById('edit-fecha').value;
+  if(!txt)return;
+  const i=DATA_MAP.get(id)||DATA.find(x=>x.id===id); // BUG #9: O(1) lookup
+  if(!i){console.warn('saveEdits: id not found',id);closeModal();return;} // F3: null guard
 
-  // Hemos optimizado para hacer un solo guardado maestro
+  // BUG #5: validación inline sin alert()
+  if(st==='En curso'&&store[id].status!=='En curso'&&store[id].segs.length===0){
+    const msgEl=document.getElementById('modal-inline-msg');
+    if(msgEl){
+      msgEl.textContent='⚠️ Para iniciar esta actividad primero agrega una nota en la bitácora (pestaña Seguimiento).';
+      msgEl.style.display='block';
+      // Scroll al mensaje
+      msgEl.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    return;
+  }
+
+  i.plan=txt;
+  store[id].planOverride=txt;
+  store[id].status=st;
+  store[id].fteCapturado=fte;
+  store[id].copCapturado=cop;
+  store[id].fechaOverride=dateVal||null;
+
+  if(dateVal){const[y,m,d]=dateVal.split('-');i.fecha=new Date(y,m-1,d);i.fechaTxt=`${d}/${m}/${y}`;}
+  else{i.fecha=null;i.fechaTxt='Sin fecha';}
+
   await saveRec(id);
-  closeModal(); render();
+  // BUG #4: Cerrar modal tras guardar y mostrar confirmación en tabla
+  showToast('Cambios guardados correctamente ✓','success');
+  closeModal();
+  render();
 }
 
-async function addSeg(id) {
-  const txt = document.getElementById('seg-txt').value.trim(); if(!txt) return;
-  const autor = sessionRole === 'admin' ? 'Administrador' : VP_NAMES[sessionRole];
-  const fecha = new Date().toLocaleDateString('es-CO');
-  
-  store[id].segs.unshift({ autor, fecha, txt });
-  if(store[id].status === 'Pendiente') store[id].status = 'En curso'; 
-  
-  // Hemos optimizado: el saveRec envía toda la fila y el nuevo segmento al tiempo.
+// FIX #4: addSeg llama PRIMERO a apiCall('addSeg') y LUEGO saveRec (sin segs)
+// FIX #2: addSeg NO cambia el estado automáticamente
+async function addSeg(id){
+  const txt=document.getElementById('seg-txt').value.trim();
+  if(!txt){
+    document.getElementById('seg-txt').style.border='2px solid var(--red)';
+    document.getElementById('seg-txt').placeholder='⚠️ Escribe algo antes de guardar';
+    return;
+  }
+  // BUG #8: autor automático según sesión, no select manual
+  const autor=getAutor();
+  const fecha=new Date().toLocaleDateString('es-CO',{year:'numeric',month:'short',day:'numeric'});
+  const seg={autor,fecha,txt};
+  store[id].segs.unshift(seg);
+
+  // FIX #4: primero enviar el segmento al Sheet de Bitácora
+  const segRes=await apiCall('addSeg',{id,seg});
+  // T7: feedback si falla
+  if(!segRes||segRes.error){
+    showToast('⚠️ La nota se guardó localmente pero no en la nube. Verifica tu conexión.','warn',5000);
+  } else {
+    showToast('Nota guardada correctamente ✓','success');
+  }
+  // FIX #1: saveRec sin segs — solo guarda status/fte/cop/plan
   await saveRec(id);
-  closeModal(); render();
+
+  openModal(id,false);
+  render();
 }
 
-function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); view=t.dataset.view; render(); });
-document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ const f=c.dataset.f; document.querySelectorAll(`.chip[data-f="${f}"]`).forEach(x=>x.classList.remove('on')); c.classList.add('on'); filter[f]=c.dataset.v; render(); });
-document.getElementById('overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
+// ─── TABS & CHIPS ─────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');view=t.dataset.view;render();
+});
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+  const f=c.dataset.f;
+  document.querySelectorAll(`.chip[data-f="${f}"]`).forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+  filter[f]=c.dataset.v;
+  render();
+});
+document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')closeModal();};
 
-if(sessionRole && sessionPass) { initApp(); } 
-else { document.getElementById('login-screen').style.display = 'flex'; }
+// ─── AUTO-LOGIN SI HAY SESIÓN ─────────────────────────────
+if(sessionRole&&sessionPass){initApp();}
+else{document.getElementById('login-screen').style.display='flex';}
 </script>
 </body>
 </html>

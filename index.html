@@ -590,11 +590,12 @@ async function initApp(){
       const it=DATA_MAP.get(id)||DATA.find(x=>x.id===id); // BUG #9: O(1) lookup
       if(it){
         if(rec.planOverride){store[id].planOverride=rec.planOverride;it.plan=rec.planOverride;}
-        if(rec.fechaOverride){
+      if(rec.fechaOverride){
           store[id].fechaOverride=rec.fechaOverride;
-          const[y,m,d]=rec.fechaOverride.split('-');
+          const dateOnly=rec.fechaOverride.split('T')[0]; // strip time part
+          const[y,m,d]=dateOnly.split('-');
           it.fecha=new Date(y,m-1,d);it.fechaTxt=`${d}/${m}/${y}`;
-        }
+}
       }
     });
     // Cargar customs

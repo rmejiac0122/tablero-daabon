@@ -328,6 +328,18 @@ const fmtCOP=v=>{if(!v||v===0)return'—';if(v>=1e9)return'$'+(v/1e9).toFixed(2)
 const fmtN=n=>n?(Math.round(n*10)/10).toString().replace('.0',''):'—';
 const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// FIX fecha customs: parser tolerante (dd/mm/yyyy, yyyy-mm-dd o ISO con hora)
+function parseFechaTxt(txt){
+  if(!txt||txt==='Sin fecha')return{fecha:null,fechaTxt:'Sin fecha'};
+  const s=String(txt).trim();
+  let y,m,d;
+  if(s.includes('/')){[d,m,y]=s.split('/');}
+  else{[y,m,d]=s.split('T')[0].split('-');}
+  if(!y||!m||!d)return{fecha:null,fechaTxt:'Sin fecha'};
+  const pad=n=>String(n).padStart(2,'0');
+  return{fecha:new Date(+y,+m-1,+d),fechaTxt:`${pad(d)}/${pad(m)}/${y}`};
+}
+
 const TODAY=new Date();
 const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const AUTHORS=['Roberto Mejía — Consultor','Jaime García — CCO'];
@@ -602,14 +614,10 @@ async function initApp(){
     if(res.customs&&res.customs.length){
       res.customs.forEach(init=>{
         if(!DATA.find(x=>x.id===init.id)){
-          let fechaObj=null;
-          if(init.fechaTxt&&init.fechaTxt!=='Sin fecha'){
-            const[d,m,y]=init.fechaTxt.split('/');
-            fechaObj=d&&m&&y?new Date(y,m-1,d):null;
-          }
-          DATA.push({...init,fecha:fechaObj});
+          const {fecha,fechaTxt}=parseFechaTxt(init.fechaTxt);
+          DATA.push({...init,fecha,fechaTxt});
           DATA_MAP.set(init.id,DATA[DATA.length-1]); // T9: keep MAP in sync with customs from Sheets
-          if(!store[init.id])store[init.id]={status:init.status,fteCapturado:0,copCapturado:0,segs:[],planOverride:null,fechaOverride:null};
+          if(!store[init.id])store[init.id]={status:init.status||'Pendiente',fteCapturado:0,copCapturado:0,segs:[],planOverride:null,fechaOverride:null};
         }
       });
     }
